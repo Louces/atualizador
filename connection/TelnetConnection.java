@@ -120,7 +120,8 @@ public class TelnetConnection {
 
 		try {
 			char lastChar = pattern.charAt(pattern.length() - 1);
-
+			
+			
 			StringBuffer sb = new StringBuffer();
 			char ch = (char) in.read();
 

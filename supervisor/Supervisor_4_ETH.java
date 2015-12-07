@@ -8,6 +8,17 @@ public class Supervisor_4_ETH implements Supervisor {
 	private String versaoAplicacao;
 	private int numeroScravos;
 	private int numeroSPVL90;
+	private String ipVLAN100;
+	
+	
+
+	public String getIpVLAN100() {
+		return ipVLAN100;
+	}
+
+	public void setIpVLAN100(String ipVLAN100) {
+		this.ipVLAN100 = ipVLAN100;
+	}
 
 	public String getSerialNumber() {
 		return serialNumber;
