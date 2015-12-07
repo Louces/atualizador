@@ -14,8 +14,9 @@ public class FtpPutColetor {
 	private String user = "root";
 	private String password = "root";
 	private JProgressBar progressBar = Principal.getProgressBar();
+	private File file = Principal.getFileUpgrade();
 
-	public FtpPutColetor(String server, final File file) {
+	public FtpPutColetor(String server) {
 
 		try {
 			final FTPClient ftp = new FTPClient();

@@ -1,7 +1,9 @@
 package connection;
 
-import org.apache.commons.net.telnet.*;
-import java.io.*;
+import java.io.InputStream;
+import java.io.PrintStream;
+
+import org.apache.commons.net.telnet.TelnetClient;
 
 public class TelnetConnection {
 
@@ -88,7 +90,7 @@ public class TelnetConnection {
 	public String sendCommand(String command) {
 		try {
 			write(command);
-			return readUntil(prompt + " ");
+			return readUntil(prompt + " ").trim();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

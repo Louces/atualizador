@@ -9,20 +9,18 @@ public class DiscoveryTypeColetor {
 
 	private ValidaIP pingColetores = new ValidaIP();
 	private TelnetConnection conexao;
-	private int numeroVlans, coletoresValidos;
-	
-	public int getColetoresValidos() {
-		return coletoresValidos;
-	}
-
-	public void setColetoresValidos(int coletoresValidos) {
-		this.coletoresValidos = coletoresValidos;
-	}
-
+	private static int numeroVlans, coletoresValidos;
 	private String coletorUmType, coletorDoisType;
 	private String out = "Tipo de Coletor : ";
 	
-	
+	public static int getColetoresValidos() {
+		return coletoresValidos;
+	}
+
+	public static void setColetoresValidos(int coletoresValidos) {
+		DiscoveryTypeColetor.coletoresValidos = coletoresValidos;
+	}
+
 	public void validate() {
 		pingColetores.setNumeroColetoresValidos();
 		

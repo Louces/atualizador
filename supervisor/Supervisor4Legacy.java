@@ -1,6 +1,6 @@
 package supervisor;
 
-public class Supervisor_4_Legado extends Supervisor_4_ETH{
+public class Supervisor4Legacy extends Supervisor4Master{
 
 	@Override
 	public boolean atualizarAplicacao() {

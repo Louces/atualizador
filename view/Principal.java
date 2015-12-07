@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -24,7 +25,11 @@ import javax.swing.table.DefaultTableModel;
 
 import connection.ValidaIP;
 import controller.DiscoveryNetwork;
+import controller.FileChooser;
+import controller.GenerateMD5;
+import controller.StoreUpgradeToColetor;
 
+@SuppressWarnings("serial")
 public class Principal extends JFrame {
 
 	private JPanel contentPane;
@@ -42,6 +47,32 @@ public class Principal extends JFrame {
 	private Button btnCarregarScript;
 	private Button btnAtualizar;
 	private static JProgressBar progressBar;
+	private static File fileUpgrade;
+	private static String md5;
+	
+	public static DefaultTableModel getTabela() {
+		return tabela;
+	}
+
+	public static void setTabela(DefaultTableModel tabela) {
+		Principal.tabela = tabela;
+	}
+
+	public static File getFileUpgrade() {
+		return fileUpgrade;
+	}
+
+	public static void setFileUpgrade(File fileUpgrade) {
+		Principal.fileUpgrade = fileUpgrade;
+	}
+
+	public static String getMd5() {
+		return md5;
+	}
+
+	public static void setMd5(String md5) {
+		Principal.md5 = md5;
+	}
 
 	public static void recordTable(String[] row) {
 		tabela.addRow(row);
@@ -92,7 +123,7 @@ public class Principal extends JFrame {
 
 		initComponents();
 		monitoringIP();
-		configBtn(1);
+		// configBtn(1);
 
 	}
 
@@ -138,21 +169,34 @@ public class Principal extends JFrame {
 
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
-		progressBar.setFont(new Font("Arial Black", Font.BOLD, 13));
+		progressBar.setFont(new Font("Arial Black", Font.BOLD, 14));
 		progressBar.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		progressBar.setBounds(300, 108, 191, 41);
 		contentPane.add(progressBar);
-		progressBar.setForeground(Color.ORANGE);
+		progressBar.setForeground(Color.GRAY);
 
 		btnSelecionarScript = new Button("Selecionar Script");
 		btnSelecionarScript.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				selectFile();
 			}
 		});
 		btnSelecionarScript.setBounds(21, 97, 120, 23);
 		contentPane.add(btnSelecionarScript);
 
 		btnCarregarScript = new Button("Carregar Script");
+		btnCarregarScript.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+				 new Thread(new Runnable() {
+			            @Override
+			            public void run() {
+			            btnCarregarScriptRun();
+			            }
+			        }).start();
+				
+			}
+		});
 		btnCarregarScript.setBounds(21, 126, 120, 23);
 		contentPane.add(btnCarregarScript);
 
@@ -223,6 +267,17 @@ public class Principal extends JFrame {
 		});
 
 	}
+	
+	
+	public void btnCarregarScriptRun(){
+		StoreUpgradeToColetor.store();
+		
+		if(StoreUpgradeToColetor.isSucess()){
+			
+		}else{
+		
+		}
+	}
 
 	public void monitoringIP() {
 		ValidaIP coletorUm, coletorDois;
@@ -244,8 +299,8 @@ public class Principal extends JFrame {
 			break;
 		}
 	}
-	
-	public void configOne(){
+
+	public void configOne() {
 		getBtnCarregarScript().setEnabled(false);
 		getBtnSelecionarScript().setEnabled(false);
 		getBtnEviarScript().setEnabled(false);
@@ -271,9 +326,36 @@ public class Principal extends JFrame {
 	public Button getBtnAtualizar() {
 		return btnAtualizar;
 	}
+
 	public static JProgressBar getProgressBar() {
 		return progressBar;
 	}
-	
-	
+
+	public File selectFile() {
+		textAreaConsole.setText("");
+		FileChooser fileChooser = new FileChooser(null);
+		fileChooser.show("Select file (.run)", false);
+
+		File arquivo = fileChooser.getSelectedFile();
+
+		if (!(arquivo == null) && arquivo.exists() && arquivo.getName().contains(".run")) {
+			setFileUpgrade(arquivo);
+
+			try {
+				setMd5(GenerateMD5.getMD5Checksum(getFileUpgrade().getAbsolutePath()));
+				textAreaConsole.setText("MD5 = " + md5);
+			} catch (Exception e) {
+				e.printStackTrace();
+				textAreaConsole.setText("O arquivo selecionado não é valido!");
+				return null;
+			}
+
+			return arquivo;
+		} else {
+			textAreaConsole.setText("O arquivo selecionado não é valido!");
+			return null;
+		}
+
+	}
+
 }

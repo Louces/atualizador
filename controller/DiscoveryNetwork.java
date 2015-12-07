@@ -1,11 +1,10 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-import connection.TelnetConnection;
-import supervisor.Supervisor_4_Legado;
+import supervisor.Supervisor4Legacy;
 import view.Principal;
+import connection.TelnetConnection;
 
 public class DiscoveryNetwork {
     
@@ -26,7 +25,7 @@ public class DiscoveryNetwork {
 		
 		if(Principal.lbTypeColetor.getText().contains("8886")){
 			
-			switch (typeColetor.getColetoresValidos()) {
+			switch (DiscoveryTypeColetor.getColetoresValidos()) {
 			
 			case 1:
 				gravaSupervisor8886(serverUm,1);
@@ -53,10 +52,13 @@ public class DiscoveryNetwork {
 	public void gravaSupervisorLegado(String server){
 		
 		String comando;
-		Supervisor_4_Legado spvl = new Supervisor_4_Legado();
+		Supervisor4Legacy spvl = new Supervisor4Legacy();
 		TelnetConnection conexao = new TelnetConnection(server);
 		
 		conexao.connectVlan100();
+		
+		conexao.sendCommand("rm *upgrade*");
+	    conexao.sendCommand("rm -rf *bkp*");
 		
 		comando = conexao.sendCommand
 		("cat supervisor.config | grep -m 1 Numero | awk '{print $5}'");
@@ -107,12 +109,12 @@ public class DiscoveryNetwork {
 		
 		String[] tableRow = new String[6];
 		
-		Supervisor_4_Legado spvl = new Supervisor_4_Legado();
+		Supervisor4Legacy spvl = new Supervisor4Legacy();
 		
 		if (coletor == 1)
-			spvl = (Supervisor_4_Legado) supervisores.get(0);
+			spvl = (Supervisor4Legacy) supervisores.get(0);
 		else
-			spvl = (Supervisor_4_Legado) supervisores.get(1);	
+			spvl = (Supervisor4Legacy) supervisores.get(1);	
 		
 		tableRow[0]= spvl.getId();
 		tableRow[1]= spvl.getSerialNumber().replaceAll("sn=", "");

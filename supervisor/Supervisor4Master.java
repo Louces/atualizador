@@ -1,6 +1,6 @@
 package supervisor;
 
-public class Supervisor_4_ETH implements Supervisor {
+public class Supervisor4Master implements Supervisor {
 
 	private String serialNumber;
 	private String id;
