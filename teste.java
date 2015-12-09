@@ -1,6 +1,6 @@
 import controller.DiscoveryTypeColetor;
 
-public class teste {
+public class Teste {
 
 	public static void main(String[] args) {
 		

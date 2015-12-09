@@ -23,9 +23,7 @@ public class StoreUpgradeToColetor {
 	}
 	
 	public static void store() {
-
 		if (Principal.lbTypeColetor.getText().contains("888")) {
-
 			switch (nColetores) {
 			case 1:
 				putFTPColetor(1);
@@ -38,14 +36,13 @@ public class StoreUpgradeToColetor {
 				break;
 
 			default:
-				break;
+			break;
 			}
 		configSucess();
 		}
 	}
 
 	public static void putFTPColetor(int coletor) {
-
 		switch (coletor) {
 		case 1:
 			put = new FtpPutColetor(serverOne);
@@ -62,13 +59,11 @@ public class StoreUpgradeToColetor {
 			sucessColetorTwo=(ckeckFile(2));
 			break;
 		default:
-			break;
+		break;
 		}
-
 	}
 	
 	public static void configSucess() {
-
 		if (nColetores == 1) {
 			if (sucessColetorOne)
 				setSucess(true);
@@ -89,25 +84,22 @@ public class StoreUpgradeToColetor {
 	}
 
 	public static boolean ckeckFile(int coletor) {
-
 		if (coletor == 1) {
-
 			connectColetor(coletor);
-
+			
 			if (md5.contains(Principal.getMd5())) {
 				return true;
 			} else
 				return false;
-
 		} else {
 			connectColetor(2);
 
 			if (md5.contains(Principal.getMd5())) {
 				return true;
-			} else
+			} else{
 				return false;
+			}
 		}
-
 	}
 
 	public static void connectColetor(int coletor) {
@@ -121,7 +113,6 @@ public class StoreUpgradeToColetor {
 		telnet.connectVlan100();
 		md5 = telnet.sendCommand("md5sum "+ Principal.getFileUpgrade().getName() + "| awk '{print $1}'");
 		telnet.closeSession();
-
 	}
 	
 }

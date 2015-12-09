@@ -17,7 +17,6 @@ public class FtpPutColetor {
 	private File file = Principal.getFileUpgrade();
 
 	public FtpPutColetor(String server) {
-
 		try {
 			final FTPClient ftp = new FTPClient();
 			ftp.connect(server);
@@ -53,7 +52,6 @@ public class FtpPutColetor {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	void setCopyStreamListener(CopyStreamAdapter streamListener) {

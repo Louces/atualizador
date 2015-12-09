@@ -33,7 +33,6 @@ import controller.StoreUpgradeToColetor;
 
 @SuppressWarnings("serial")
 public class Principal extends JFrame {
-
 	private JPanel contentPane;
 	public static TextArea textAreaConsole;
 	private static Label lbColetorUm;
@@ -54,6 +53,14 @@ public class Principal extends JFrame {
 	
 	long inicio,fim;
 	
+	public static Label getLbTypeColetor() {
+		return lbTypeColetor;
+	}
+
+	public static void setLbTypeColetor(Label lbTypeColetor) {
+		Principal.lbTypeColetor = lbTypeColetor;
+	}
+
 	public static DefaultTableModel getTabela() {
 		return tabela;
 	}
@@ -83,9 +90,10 @@ public class Principal extends JFrame {
 	}
 
 	public static void eraseTable() {
-		if (tabela.getRowCount() > 0)
+		if (tabela.getRowCount() > 0){
 			for (int i = tabela.getRowCount() - 1; i > -1; i--)
 				tabela.removeRow(i);
+		}
 	}
 
 	public static Label getLbColetorUm() {
@@ -293,11 +301,10 @@ public class Principal extends JFrame {
 	}
 
 	public void monitoringIP() {
-		ValidaIP coletorUm, coletorDois;
-
+		ValidaIP coletorUm;
+		ValidaIP coletorDois;
 		coletorUm = new ValidaIP();
 		coletorUm.monitoringIP(1);
-
 		coletorDois = new ValidaIP();
 		coletorDois.monitoringIP(2);
 	}
@@ -362,13 +369,10 @@ public class Principal extends JFrame {
 				textAreaConsole.setText("O arquivo selecionado não é valido!");
 				return null;
 			}
-
 			return arquivo;
 		} else {
 			textAreaConsole.setText("O arquivo selecionado não é valido!");
 			return null;
 		}
-
 	}
-
 }

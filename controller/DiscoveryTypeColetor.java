@@ -23,7 +23,6 @@ public class DiscoveryTypeColetor {
 
 	public void validate() {
 		pingColetores.setNumeroColetoresValidos();
-		
 		setColetoresValidos(pingColetores.getNumeroColetoresValidos());
 
 		switch (pingColetores.getNumeroColetoresValidos()) {

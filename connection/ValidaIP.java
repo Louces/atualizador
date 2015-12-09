@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import view.Principal;
 
 public class ValidaIP {
-
 	private String addressIP;
 	private String localHost = "127.0.0.1";
 	private int numeroColetoresValidos;
@@ -30,7 +29,6 @@ public class ValidaIP {
 				inet = InetAddress.getByName(Principal.getTxfColetorDois().getText());
 
 			if (inet.isReachable(5000)) {
-
 				setAddressIP(inet.toString());
 				
 				if (getAddressIP().contains(localHost)) {
