@@ -16,7 +16,6 @@ import java.io.File;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -24,12 +23,12 @@ import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-import supervisor.Supervisor4Legacy;
 import connection.ValidaIP;
 import controller.DiscoveryNetwork;
 import controller.FileChooser;
 import controller.GenerateMD5;
 import controller.StoreUpgradeToColetor;
+import controller.UpdateSupervisor;
 
 @SuppressWarnings("serial")
 public class Principal extends JFrame {
@@ -257,17 +256,12 @@ public class Principal extends JFrame {
 
 		btnAtualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Supervisor4Legacy teste = new Supervisor4Legacy();
-				boolean upgrade = teste.Update("172.30.0.235");
+			
+				UpdateSupervisor atualizar = new UpdateSupervisor();
+				atualizar.update();
 				
-				if(upgrade){
-					JOptionPane.showMessageDialog(null, "Sucesso!");
-					fim = System.currentTimeMillis();
-					textAreaConsole.setText((fim - inicio) / 1000d + "");
-				}else{
-					JOptionPane.showMessageDialog(null, "Erro");
-				}
-
+				fim = System.currentTimeMillis();
+				textAreaConsole.setText((fim - inicio) / 1000d + "");
 			}
 		});
 		btnEviarScript.addActionListener(new ActionListener() {

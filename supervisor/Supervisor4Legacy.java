@@ -13,8 +13,8 @@ public class Supervisor4Legacy extends Supervisor4Master {
 	private String nameScript;
 	private boolean flag;
 
-	public boolean Update(String server) {
-		connect(server);
+	public boolean Update() {
+		connect(getIpVLAN100());
 		stopSupervisor(conexao);
 		nameScript = Principal.getFileUpgrade().getName();
 		conexao.sendCommand("chmod +x " + nameScript);

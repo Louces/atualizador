@@ -9,10 +9,20 @@ public class DiscoveryTypeColetor {
 
 	private ValidaIP pingColetores = new ValidaIP();
 	private TelnetConnection conexao;
-	private static int numeroVlans, coletoresValidos;
+	private static int numeroVlans;
+	private static int coletoresValidos;
 	private String coletorUmType, coletorDoisType;
+	private static String typeColetor; 
 	private String out = "Tipo de Coletor : ";
 	
+	public static String getTypeColetor() {
+		return typeColetor;
+	}
+
+	public static void setTypeColetor(String typeColetor) {
+		DiscoveryTypeColetor.typeColetor = typeColetor;
+	}
+
 	public static int getColetoresValidos() {
 		return coletoresValidos;
 	}
@@ -58,28 +68,33 @@ public class DiscoveryTypeColetor {
 				break;
 			}
 
-		
-		if(numeroVlans==1)
+		if(numeroVlans==1){
 			return "8886";
-		else if(numeroVlans==6)
+		}else if(numeroVlans==6){
 			return "8887";
-		else
+		}else{
 			return "Indefinido";
+		}
 	}
 	
 	public void config(){
 		switch (pingColetores.getNumeroColetoresValidos()) {
 		case 1:
 			Principal.lbTypeColetor.setText(out + coletorUmType);
+			setTypeColetor(coletorUmType);
 			break;
 		case 2:
 			Principal.lbTypeColetor.setText(out + coletorDoisType);
+			setTypeColetor(coletorDoisType);
 			break;
 		case 3:
-			if (coletorUmType.equals(coletorDoisType))
+			if (coletorUmType.equals(coletorDoisType)){
 				Principal.lbTypeColetor.setText(out + coletorUmType);
-			else
-				Principal.lbTypeColetor.setText(out +" Coletores distintos");
+				setTypeColetor(coletorUmType);
+			}else{
+			Principal.lbTypeColetor.setText(out +" Coletores distintos");
+			setTypeColetor("Coletores distintos");
+			}
 			break;
 		}
 	}

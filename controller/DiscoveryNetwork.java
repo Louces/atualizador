@@ -7,10 +7,18 @@ import view.Principal;
 import connection.TelnetConnection;
 
 public class DiscoveryNetwork {
-    private String serverUm = Principal.getTxfColetorUm().getText();
+    	private String serverUm = Principal.getTxfColetorUm().getText();
     private String serverDois = Principal.getTxfColetorDois().getText();
     private DiscoveryTypeColetor typeColetor = new DiscoveryTypeColetor();
-	public static ArrayList<Object> supervisores = new ArrayList<Object>();
+	private static ArrayList<Object> supervisores = new ArrayList<Object>();
+	
+	public static ArrayList<Object> getSupervisores() {
+		return supervisores;
+	}
+
+	public static void setSupervisores(ArrayList<Object> supervisores) {
+		DiscoveryNetwork.supervisores = supervisores;
+	}
 	
 	public void network(){
 		Principal.eraseTable();
