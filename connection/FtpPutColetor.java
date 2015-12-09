@@ -22,9 +22,9 @@ public class FtpPutColetor {
 			final FTPClient ftp = new FTPClient();
 			ftp.connect(server);
 			ftp.login(user, password);
-			System.out.println("Connected to " + server + ".");
+			System.out.println("Connected to " + server);
 			System.out.print(ftp.getReplyString());
-
+			
 			InputStream is = new FileInputStream(file.getAbsolutePath());
 
 			CopyStreamAdapter streamListener = new CopyStreamAdapter() {
@@ -45,7 +45,7 @@ public class FtpPutColetor {
 
 			ftp.setFileType(FTP.BINARY_FILE_TYPE);
 			ftp.storeFile(file.getName(), is);
-			System.out.println("Arquivo Enviado");
+			System.out.print(ftp.getReplyString());
 
 			ftp.logout();
 			ftp.disconnect();

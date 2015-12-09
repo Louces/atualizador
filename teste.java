@@ -1,6 +1,4 @@
-import connection.TelnetConnection;
 import controller.DiscoveryTypeColetor;
-
 
 public class teste {
 

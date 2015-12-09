@@ -1,5 +1,7 @@
 package supervisor;
 
+import connection.TelnetConnection;
+
 public class Supervisor4Master implements Supervisor {
 
 	private String serialNumber;
@@ -9,8 +11,17 @@ public class Supervisor4Master implements Supervisor {
 	private int numeroScravos;
 	private int numeroSPVL90;
 	private String ipVLAN100;
+	private String status;
 	
+	//private TelnetConnection conexao;
 	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public String getIpVLAN100() {
 		return ipVLAN100;
@@ -68,6 +79,19 @@ public class Supervisor4Master implements Supervisor {
 		this.numeroSPVL90 = numeroSPVL90;
 	}
     
+	public void stopSupervisor(TelnetConnection conexao){
+		for(int i = 0 ; i<3 ; i++)
+		 conexao.sendCommand("./stopsupervisor.sh");
+	}
+	
+	public void sleep(TelnetConnection conexao,int i){
+		conexao.sendCommand("sleep " + i);
+	}
+	
+	public void clear(TelnetConnection conexao){
+		conexao.sendCommand("rm *upgrade*");
+	    conexao.sendCommand("rm -rf *bkp*");
+	}
 	
 	@Override
 	public boolean atualizarAplicacao() {

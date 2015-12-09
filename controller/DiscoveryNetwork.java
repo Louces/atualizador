@@ -60,7 +60,7 @@ public class DiscoveryNetwork {
 		conexao.sendCommand("rm *upgrade*");
 	    conexao.sendCommand("rm -rf *bkp*");
 		
-		comando = conexao.sendCommand
+	    comando = conexao.sendCommand
 		("cat supervisor.config | grep -m 1 Numero | awk '{print $5}'");
 		spvl.setId(filterCommand(comando));
 		
@@ -73,12 +73,11 @@ public class DiscoveryNetwork {
 		spvl.setVersaoAplicacao(filterCommand(comando));
 		
 		spvl.setIpVLAN100(server);
+		spvl.setStatus("Descoberto");
 		
 		conexao.closeSession();
 		
 		supervisores.add(spvl);
-		
-		
 	}
     
 	public String filterCommand(String command) {
