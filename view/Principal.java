@@ -158,11 +158,11 @@ public class Principal extends JFrame {
 		contentPane.add(lbColetorDois);
 
 		txfColetorDois = new TextField();
-		txfColetorDois.setBounds(95, 40, 133, 19);
+		txfColetorDois.setBounds(95, 40, 133, 21);
 		contentPane.add(txfColetorDois);
 
 		txfColetorUm = new TextField();
-		txfColetorUm.setBounds(95, 10, 133, 19);
+		txfColetorUm.setBounds(95, 10, 133, 21);
 		contentPane.add(txfColetorUm);
 		txfColetorUm.setText("172.30.0.235");
 
@@ -232,6 +232,7 @@ public class Principal extends JFrame {
 		panel.add(scrollPane);
 
 		table = new JTable();
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -251,7 +252,12 @@ public class Principal extends JFrame {
 		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
 				"Site", "S/N", "Mestre/Scravo", "Versão Atual", "Status",
 				"Check" }));
-
+		table.getColumnModel().getColumn(0).setPreferredWidth(3);
+		table.getColumnModel().getColumn(1).setPreferredWidth(10);  
+		table.getColumnModel().getColumn(2).setPreferredWidth(55);  
+		table.getColumnModel().getColumn(3).setPreferredWidth(55);  
+		table.getColumnModel().getColumn(4).setPreferredWidth(110);  
+		table.getColumnModel().getColumn(5).setPreferredWidth(60);  
 		tabela = (DefaultTableModel) table.getModel();
 
 		btnAtualizar.addActionListener(new ActionListener() {

@@ -57,54 +57,38 @@ public class DiscoveryNetwork {
 	    conexao.sendCommand("rm -rf *bkp*");
 		comando = conexao.sendCommand
 		("cat supervisor.config | grep -m 1 Numero | awk '{print $5}'");
-		spvl.setId(filterCommand(comando));
+		spvl.setId(FilterCommand.filter(comando));
 		comando = conexao.sendCommand
 		("cat /proc/cmdline | awk '{print $1}'");
-		spvl.setSerialNumber(filterCommand(comando));
+		spvl.setSerialNumber(FilterCommand.filter(comando).replaceAll("sn=", ""));
 		comando = conexao.sendCommand
 		("./supervisor -v | awk '{print $2}'");
-		spvl.setVersaoAplicacao(filterCommand(comando));
+		spvl.setVersaoAplicacao(FilterCommand.filter(comando).replaceFirst("V", ""));
 		spvl.setIpVLAN100(server);
 		spvl.setStatus("Descoberto");
 		conexao.closeSession();
 		supervisores.add(spvl);
 	}
     
-	public String filterCommand(String command) {
-		int start = 0, end = 0;
 
-		for (int i = 0; i < command.length() - 1; i++) {
-			if (command.charAt(i) == '\n') {
-				start = i + 1;
-				for (int j = i + 1; j < command.length() - 1; j++) {
-					if (command.charAt(j) == '\n') {
-						end = j - 1;
-						break;
-					}
-				}
-
-				if (end != 0){
-					break;
-				}
-			}
-		}
-		return command.substring(start, end);
-	}
-	
 	public void gravaSupervisor8886(String server, int coletor){
 		gravaSupervisorLegado(server);
 		String[] tableRow = new String[6];
 		Supervisor4Legacy spvl = new Supervisor4Legacy();
 		
-		if (coletor == 1)
+		if (coletor == 1){
 			spvl = (Supervisor4Legacy) supervisores.get(0);
-		else
-			spvl = (Supervisor4Legacy) supervisores.get(1);	
+			Strings.setSnColetorOne(spvl.getSerialNumber());
+		}else{
+			spvl = (Supervisor4Legacy) supervisores.get(1);
+			Strings.setSnColetorTwo(spvl.getSerialNumber());
+		}
+				
 		
 		tableRow[0]= spvl.getId();
-		tableRow[1]= spvl.getSerialNumber().replaceAll("sn=", "");
+		tableRow[1]= spvl.getSerialNumber();
 		tableRow[2]= "Mestre";
-		tableRow[3]= spvl.getVersaoAplicacao().replaceFirst("V", "");
+		tableRow[3]= spvl.getVersaoAplicacao();
 		tableRow[4]= "Descoberto";
 		tableRow[5]= "ENVIAR[X]";
 		Principal.recordTable(tableRow);

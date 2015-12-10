@@ -40,10 +40,12 @@ public class Supervisor4Legacy extends Supervisor4Master {
 						sleep(conexao, 4);
 						conexao.sendCommand("killall klogd");
 						conexao.sendCommand("rm " + nameScript);
+						refreshTable(conexao);
 						conexao.sendCommand("reboot");
 						return true;
 					} else if (status.contains(msgSyslognNoChange)) {
 						conexao.sendCommand("rm " + nameScript);
+						refreshTable(conexao);
 						conexao.sendCommand("reboot");
 						return true;
 					} else {
@@ -60,5 +62,6 @@ public class Supervisor4Legacy extends Supervisor4Master {
 		conexao = new TelnetConnection(server);
 		conexao.connectVlan100();
 	}
+	
 
 }

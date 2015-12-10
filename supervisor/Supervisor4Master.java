@@ -1,6 +1,8 @@
 package supervisor;
 
 import connection.TelnetConnection;
+import controller.FilterCommand;
+import controller.TableInfo;
 
 public class Supervisor4Master implements Supervisor {
 
@@ -91,6 +93,15 @@ public class Supervisor4Master implements Supervisor {
 	public void clear(TelnetConnection conexao){
 		conexao.sendCommand("rm *upgrade*");
 	    conexao.sendCommand("rm -rf *bkp*");
+	}
+	
+	public void refreshTable(TelnetConnection conexao) {
+		String NEWversion = 
+		FilterCommand.filter(conexao.sendCommand(
+		"./supervisor -v | awk '{print $2}'").replace("V", ""));
+		TableInfo.refresh(getSerialNumber(), 3, NEWversion);
+		TableInfo.refresh(getSerialNumber(), 4, "Unidade reinicializada");
+		TableInfo.refresh(getSerialNumber(), 5, "");
 	}
 	
 	@Override

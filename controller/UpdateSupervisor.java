@@ -10,13 +10,7 @@ public class UpdateSupervisor {
 	private int nColetores;
 	private String typeColetor;
 	private ArrayList<Object> SPVL;
-
-	public void config() {
-		nColetores = DiscoveryTypeColetor.getColetoresValidos();
-		typeColetor = DiscoveryTypeColetor.getTypeColetor();
-		SPVL = DiscoveryNetwork.getSupervisores();
-	}
-
+	
 	public void update() {
 		config();
 
@@ -31,5 +25,11 @@ public class UpdateSupervisor {
 				spvl.Update();
 			}
 		}
+	}
+	
+	public void config() {
+		nColetores = DiscoveryTypeColetor.getColetoresValidos();
+		typeColetor = DiscoveryTypeColetor.getTypeColetor();
+		SPVL = DiscoveryNetwork.getSupervisores();
 	}
 }

@@ -8,7 +8,8 @@ public class TableInfo {
 		int rows = Principal.getTabela().getRowCount();
 
 		for (int i = 0; i < rows; i++)
-			if (Principal.getTabela().getValueAt(i, 1).equals(SN))
+			if (Principal.getTabela().getValueAt(i, 1).equals(SN)) {
 				Principal.getTabela().setValueAt(gravar, i, coluna);
+			}
 	}
 }

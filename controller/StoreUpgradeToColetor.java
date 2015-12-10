@@ -65,22 +65,25 @@ public class StoreUpgradeToColetor {
 	
 	public static void configSucess() {
 		if (nColetores == 1) {
-			if (sucessColetorOne)
+			if (sucessColetorOne){
 				setSucess(true);
-			else
+			}else{
 				setSucess(false);
+			}
 		} else if (nColetores == 2) {
-			if (sucessColetorTwo)
+			if (sucessColetorTwo){
 				setSucess(true);
-			else
+			}else{
 				setSucess(false);
+			}
 		} else if (nColetores == 3) {
-			if (sucessColetorOne && sucessColetorTwo)
+			if (sucessColetorOne && sucessColetorTwo){
 				setSucess(true);
-			else
+			}else{
 				setSucess(false);
+			}
 		}
-
+	refreshTable();
 	}
 
 	public static boolean ckeckFile(int coletor) {
@@ -89,8 +92,9 @@ public class StoreUpgradeToColetor {
 			
 			if (md5.contains(Principal.getMd5())) {
 				return true;
-			} else
+			} else{
 				return false;
+			}
 		} else {
 			connectColetor(2);
 
@@ -113,6 +117,26 @@ public class StoreUpgradeToColetor {
 		telnet.connectVlan100();
 		md5 = telnet.sendCommand("md5sum "+ Principal.getFileUpgrade().getName() + "| awk '{print $1}'");
 		telnet.closeSession();
+	}
+	
+	public static void refreshTable() {
+		switch (nColetores) {
+		case 1:
+			TableInfo.refresh(Strings.getSnColetorOne(), 4,"Aquardando atualização");
+			TableInfo.refresh(Strings.getSnColetorOne(), 5,"ATUALIZAR[X]");
+			break;
+		case 2:
+			TableInfo.refresh(Strings.getSnColetorTwo(), 4,"Aquardando atualização");
+			TableInfo.refresh(Strings.getSnColetorTwo(), 5,"ATUALIZAR[X]");
+			break;
+		case 3:
+			TableInfo.refresh(Strings.getSnColetorOne(), 4,"Aquardando atualização");
+			TableInfo.refresh(Strings.getSnColetorOne(), 5,"ATUALIZAR[X]");
+			TableInfo.refresh(Strings.getSnColetorTwo(), 4,"Aquardando atualização");
+			TableInfo.refresh(Strings.getSnColetorTwo(), 5,"ATUALIZAR[X]");
+		default:
+			break;
+		}
 	}
 	
 }
