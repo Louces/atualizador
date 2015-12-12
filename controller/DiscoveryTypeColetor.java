@@ -32,6 +32,7 @@ public class DiscoveryTypeColetor {
 	}
 
 	public void validate() {
+		Console.print("Descobrindo o Nº de coletores válidos.");
 		pingColetores.setNumeroColetoresValidos();
 		setColetoresValidos(pingColetores.getNumeroColetoresValidos());
 
@@ -50,13 +51,15 @@ public class DiscoveryTypeColetor {
 			coletorDoisType=discoveryType(Principal.getTxfColetorDois().getText());
 			break;
 		}
-	config();	
+	config();
+	Console.print("Tipo : " + getTypeColetor());
 	}
 
 	public String discoveryType(String server) {
 		conexao = new TelnetConnection(server);
 		conexao.connectVlan100();
-
+		
+		Console.print("Descobrindo o tipo de coletor.");
 		String comando = conexao.sendCommand
 		("ifconfig | grep eth0. | wc | awk '{print $1}'");
 
@@ -67,10 +70,12 @@ public class DiscoveryTypeColetor {
 				numeroVlans=Integer.parseInt(comando.charAt(i + 1)+"");
 				break;
 			}
-
+		
 		if(numeroVlans==1){
+			setTypeColetor("8886");
 			return "8886";
 		}else if(numeroVlans==6){
+			setTypeColetor("8887");
 			return "8887";
 		}else{
 			return "Indefinido";

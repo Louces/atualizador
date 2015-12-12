@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 
 import supervisor.Supervisor4Legacy;
+import view.Principal;
 
 public class UpdateSupervisor {
 
@@ -12,6 +13,7 @@ public class UpdateSupervisor {
 	private ArrayList<Object> SPVL;
 	
 	public void update() {
+		Principal.configBtn(5, false);
 		config();
 
 		if (typeColetor.contains("8886")) {
@@ -24,6 +26,7 @@ public class UpdateSupervisor {
 			for (Supervisor4Legacy spvl : spvlLegacy) {
 				spvl.Update();
 			}
+		Principal.configBtn(1, true);
 		}
 	}
 	

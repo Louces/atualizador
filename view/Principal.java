@@ -24,6 +24,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import connection.ValidaIP;
+import controller.Console;
 import controller.DiscoveryNetwork;
 import controller.FileChooser;
 import controller.GenerateMD5;
@@ -33,7 +34,7 @@ import controller.UpdateSupervisor;
 @SuppressWarnings("serial")
 public class Principal extends JFrame {
 	private JPanel contentPane;
-	public static TextArea textAreaConsole;
+	private static TextArea textAreaConsole;
 	private static Label lbColetorUm;
 	private static TextField txfColetorDois;
 	private static Label lbColetorDois;
@@ -41,11 +42,11 @@ public class Principal extends JFrame {
 	public static Label lbTypeColetor;
 	private static JTable table;
 	private static DefaultTableModel tabela;
-	private Button btnDescobri;
-	private Button btnEviarScript;
-	private Button btnSelecionarScript;
-	private Button btnCarregarScript;
-	private Button btnAtualizar;
+	private static Button btnDescobrir;
+	private static Button btnEviarScript;
+	private static Button btnSelecionarScript;
+	private static Button btnCarregarScript;
+	private static Button btnAtualizar;
 	private static JProgressBar progressBar;
 	private static File fileUpgrade;
 	private static String md5;
@@ -166,9 +167,9 @@ public class Principal extends JFrame {
 		contentPane.add(txfColetorUm);
 		txfColetorUm.setText("172.30.0.235");
 
-		btnDescobri = new Button("Descobrir");
-		btnDescobri.setBounds(300, 10, 86, 23);
-		contentPane.add(btnDescobri);
+		btnDescobrir = new Button("Descobrir");
+		btnDescobrir.setBounds(300, 10, 86, 23);
+		contentPane.add(btnDescobrir);
 
 		btnEviarScript = new Button("Enviar Script");
 		btnEviarScript.setBounds(300, 39, 86, 23);
@@ -198,14 +199,12 @@ public class Principal extends JFrame {
 		btnCarregarScript = new Button("Carregar Script");
 		btnCarregarScript.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 				 new Thread(new Runnable() {
 			            @Override
 			            public void run() {
 			            btnCarregarScriptRun();
 			            }
 			        }).start();
-				
 			}
 		});
 		btnCarregarScript.setBounds(21, 126, 120, 23);
@@ -214,7 +213,6 @@ public class Principal extends JFrame {
 		lbTypeColetor = new Label("Tipo de Coletor :");
 		lbTypeColetor.setBounds(21, 64, 273, 21);
 		contentPane.add(lbTypeColetor);
-		lbTypeColetor.setEnabled(false);
 
 		textAreaConsole = new TextArea();
 		textAreaConsole.setBounds(21, 410, 470, 202);
@@ -250,11 +248,11 @@ public class Principal extends JFrame {
 		});
 		scrollPane.setViewportView(table);
 		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
-				"Site", "S/N", "Mestre/Scravo", "Versão Atual", "Status",
+				"Site", "S/N", "M/E", "Versão Atual", "Status",
 				"Check" }));
-		table.getColumnModel().getColumn(0).setPreferredWidth(3);
+		table.getColumnModel().getColumn(0).setPreferredWidth(2);
 		table.getColumnModel().getColumn(1).setPreferredWidth(10);  
-		table.getColumnModel().getColumn(2).setPreferredWidth(55);  
+		table.getColumnModel().getColumn(2).setPreferredWidth(20);  
 		table.getColumnModel().getColumn(3).setPreferredWidth(55);  
 		table.getColumnModel().getColumn(4).setPreferredWidth(110);  
 		table.getColumnModel().getColumn(5).setPreferredWidth(60);  
@@ -262,35 +260,47 @@ public class Principal extends JFrame {
 
 		btnAtualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
-				UpdateSupervisor atualizar = new UpdateSupervisor();
-				atualizar.update();
-				
-				fim = System.currentTimeMillis();
-				textAreaConsole.setText((fim - inicio) / 1000d + "");
+				new Thread(new Runnable() {
+		            @Override
+		            public void run() {
+		            btnAtualizar();
+		            }
+		        }).start();
 			}
 		});
 		btnEviarScript.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnDescobri.addActionListener(new ActionListener() {
+		btnDescobrir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				inicio = System.currentTimeMillis();
-
-				DiscoveryNetwork t = new DiscoveryNetwork();
-
-				t.network();
 				
-				
+				 new Thread(new Runnable() {
+			            @Override
+			            public void run() {
+			            btnDescobrir();
+			            }
+			        }).start();
 			}
 		});
-
+	setDisableAll();
+	setEnableBtn(1);
 	}
 	
+	public void btnAtualizar(){
+		getTextAreaConsole().setText("");
+		UpdateSupervisor atualizar = new UpdateSupervisor();
+		atualizar.update();
+	}
 	
+	public void btnDescobrir(){
+		getTextAreaConsole().setText("");
+		DiscoveryNetwork descobrir = new DiscoveryNetwork();
+		descobrir.network();
+	}
+
 	public void btnCarregarScriptRun(){
+		getTextAreaConsole().setText("");
 		StoreUpgradeToColetor.store();
 		
 		if(StoreUpgradeToColetor.isSucess()){
@@ -309,41 +319,83 @@ public class Principal extends JFrame {
 		coletorDois.monitoringIP(2);
 	}
 
-	public void configBtn(int config) {
-		switch (config) {
-		case 1:
-			configOne();
-			break;
-
-		default:
-			break;
+	public static void configBtn(int config, boolean opcao) {
+		if(opcao){
+			setEnableBtn(config);
+		}else{
+			setDisable(config);
 		}
 	}
 
-	public void configOne() {
+	public static void setDisableAll() {
+		getBtnDescobri().setEnabled(false);
 		getBtnCarregarScript().setEnabled(false);
 		getBtnSelecionarScript().setEnabled(false);
 		getBtnEviarScript().setEnabled(false);
 		getBtnAtualizar().setEnabled(false);
 	}
-
-	public Button getBtnDescobri() {
-		return btnDescobri;
+	
+	public static void  setEnableBtn(int config){
+		switch (config) {
+		case 1:
+			getBtnDescobri().setEnabled(true);
+			break;
+		case 2:
+			getBtnSelecionarScript().setEnabled(true);
+			break;	
+		case 3:
+			getBtnCarregarScript().setEnabled(true);
+			break;
+		case 4:
+			getBtnEviarScript().setEnabled(true);
+			break;
+		case 5:
+			getBtnAtualizar().setEnabled(true);
+			break;	
+		default:
+		break;
+		}
+	}
+	
+	public static void setDisable(int config){
+		switch (config) {
+		case 1:
+			getBtnDescobri().setEnabled(false);
+			break;
+		case 2:
+			getBtnSelecionarScript().setEnabled(false);
+			break;	
+		case 3:
+			getBtnCarregarScript().setEnabled(false);
+			break;
+		case 4:
+			getBtnEviarScript().setEnabled(false);
+			break;
+		case 5:
+			getBtnAtualizar().setEnabled(false);
+			break;	
+		default:
+		break;
+		}
 	}
 
-	public Button getBtnEviarScript() {
+	public static Button getBtnDescobri() {
+		return btnDescobrir;
+	}
+
+	public static Button getBtnEviarScript() {
 		return btnEviarScript;
 	}
 
-	public Button getBtnSelecionarScript() {
+	public static Button getBtnSelecionarScript() {
 		return btnSelecionarScript;
 	}
 
-	public Button getBtnCarregarScript() {
+	public static Button getBtnCarregarScript() {
 		return btnCarregarScript;
 	}
 
-	public Button getBtnAtualizar() {
+	public static Button getBtnAtualizar() {
 		return btnAtualizar;
 	}
 
@@ -360,19 +412,23 @@ public class Principal extends JFrame {
 
 		if (!(arquivo == null) && arquivo.exists() && arquivo.getName().contains(".run")) {
 			setFileUpgrade(arquivo);
+			configBtn(3, true);
 
 			try {
 				setMd5(GenerateMD5.getMD5Checksum(getFileUpgrade().getAbsolutePath()));
-				textAreaConsole.setText("MD5 = " + md5);
 			} catch (Exception e) {
 				e.printStackTrace();
-				textAreaConsole.setText("O arquivo selecionado não é valido!");
+				Console.print("O arquivo selecionado não é valido!");
 				return null;
 			}
 			return arquivo;
 		} else {
-			textAreaConsole.setText("O arquivo selecionado não é valido!");
+			Console.print("O arquivo selecionado não é valido!");
+			configBtn(3, false);
 			return null;
 		}
+	}
+	public static TextArea getTextAreaConsole() {
+		return textAreaConsole;
 	}
 }

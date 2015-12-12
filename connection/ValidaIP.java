@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.net.InetAddress;
 
+import controller.Console;
 import view.Principal;
 
 public class ValidaIP {
@@ -83,6 +84,13 @@ public class ValidaIP {
 		int x=0, y=0;
 		if(ping(1)){x=1;}
 		if(ping(2)){y=2;}
+		
+		if((x+y)==3){
+			Console.print("Nº de coletores válidos : 2");	
+		}else{
+			Console.print("Nº de coletores válidos : 1");
+		}
+				
 		numeroColetoresValidos=x+y;
 	}
 }

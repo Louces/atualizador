@@ -22,4 +22,5 @@ public class FilterCommand {
 		}
 		return command.substring(start, end);
 	}
+	
 }

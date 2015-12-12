@@ -7,7 +7,7 @@ import view.Principal;
 import connection.TelnetConnection;
 
 public class DiscoveryNetwork {
-    	private String serverUm = Principal.getTxfColetorUm().getText();
+    private String serverUm = Principal.getTxfColetorUm().getText();
     private String serverDois = Principal.getTxfColetorDois().getText();
     private DiscoveryTypeColetor typeColetor = new DiscoveryTypeColetor();
 	private static ArrayList<Object> supervisores = new ArrayList<Object>();
@@ -25,6 +25,8 @@ public class DiscoveryNetwork {
 		supervisores.clear();
 		typeColetor.validate();
 		
+		Console.print("Descobrido rede...");
+		
 		if(Principal.lbTypeColetor.getText().contains("8886")){
 			switch (DiscoveryTypeColetor.getColetoresValidos()) {
 			case 1:
@@ -40,12 +42,15 @@ public class DiscoveryNetwork {
 			default:
 			break;
 			}
-			
+		Principal.configBtn(1, false);
+		Principal.configBtn(2, true);
+		
 		}else if(Principal.lbTypeColetor.getText().contains("8887")){
 			
 		}else{
 			
 		}
+		Console.print("Rede descoberta.");	
 	}
 	
 	public void gravaSupervisorLegado(String server){
@@ -53,9 +58,11 @@ public class DiscoveryNetwork {
 		Supervisor4Legacy spvl = new Supervisor4Legacy();
 		TelnetConnection conexao = new TelnetConnection(server);
 		conexao.connectVlan100();
+		Console.print("Apagando arquivos remanescentes...");
 		conexao.sendCommand("rm *upgrade*");
 	    conexao.sendCommand("rm -rf *bkp*");
-		comando = conexao.sendCommand
+	    Console.print("Obtendo dados.");
+	    comando = conexao.sendCommand
 		("cat supervisor.config | grep -m 1 Numero | awk '{print $5}'");
 		spvl.setId(FilterCommand.filter(comando));
 		comando = conexao.sendCommand
@@ -67,10 +74,10 @@ public class DiscoveryNetwork {
 		spvl.setIpVLAN100(server);
 		spvl.setStatus("Descoberto");
 		conexao.closeSession();
+		Console.print("Adicionando dados...");
 		supervisores.add(spvl);
 	}
     
-
 	public void gravaSupervisor8886(String server, int coletor){
 		gravaSupervisorLegado(server);
 		String[] tableRow = new String[6];
@@ -84,13 +91,13 @@ public class DiscoveryNetwork {
 			Strings.setSnColetorTwo(spvl.getSerialNumber());
 		}
 				
-		
 		tableRow[0]= spvl.getId();
 		tableRow[1]= spvl.getSerialNumber();
 		tableRow[2]= "Mestre";
 		tableRow[3]= spvl.getVersaoAplicacao();
 		tableRow[4]= "Descoberto";
 		tableRow[5]= "ENVIAR[X]";
+		Console.print("Gravando dados na tabela.");
 		Principal.recordTable(tableRow);
 	}
 }
