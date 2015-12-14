@@ -38,12 +38,14 @@ public class Supervisor4Legacy extends Supervisor4Master {
 					conexao.closeSession();
 					return false;
 				}
+			Console.print("Aguarde 4 segundos.");	
 			sleep(conexao, 4);
 
 				while (true) {
 					status = conexao.sendCommand("cat update.log");
 					flag = status.contains(msgSyslogChange);
 					if (flag) {
+						Console.print("Aguarde 4 segundos.");
 						sleep(conexao, 4);
 						conexao.sendCommand("killall klogd");
 						conexao.sendCommand("rm " + nameScript);

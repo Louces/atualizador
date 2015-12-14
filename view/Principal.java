@@ -144,48 +144,50 @@ public class Principal extends JFrame {
 		setResizable(false);
 		setTitle("Padtec");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 518, 650);
+		setBounds(100, 100, 518, 578);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		lbColetorUm = new Label("Coletor 1");
-		lbColetorUm.setBounds(21, 10, 65, 21);
+		lbColetorUm.setBounds(142, 10, 57, 22);
 		contentPane.add(lbColetorUm);
 
 		lbColetorDois = new Label("Coletor 2");
-		lbColetorDois.setBounds(21, 39, 65, 21);
+		lbColetorDois.setBounds(316, 10, 57, 22);
 		contentPane.add(lbColetorDois);
 
 		txfColetorDois = new TextField();
-		txfColetorDois.setBounds(95, 40, 133, 21);
+		txfColetorDois.setBounds(384, 10, 105, 22);
 		contentPane.add(txfColetorDois);
 
 		txfColetorUm = new TextField();
-		txfColetorUm.setBounds(95, 10, 133, 21);
+		txfColetorUm.setBounds(205, 10, 105, 22);
 		contentPane.add(txfColetorUm);
 		txfColetorUm.setText("172.30.0.235");
 
 		btnDescobrir = new Button("Descobrir");
-		btnDescobrir.setBounds(300, 10, 86, 23);
+		btnDescobrir.setBounds(21, 10, 105, 23);
 		contentPane.add(btnDescobrir);
 
 		btnEviarScript = new Button("Enviar Script");
-		btnEviarScript.setBounds(300, 39, 86, 23);
+		btnEviarScript.setBounds(21, 97, 105, 23);
 		contentPane.add(btnEviarScript);
 
 		btnAtualizar = new Button("Atualizar");
-		btnAtualizar.setBounds(300, 68, 86, 23);
+		btnAtualizar.setBounds(21, 126, 105, 23);
 		contentPane.add(btnAtualizar);
 
 		progressBar = new JProgressBar();
+		progressBar.setEnabled(true);
 		progressBar.setStringPainted(true);
 		progressBar.setFont(new Font("Arial Black", Font.BOLD, 14));
 		progressBar.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-		progressBar.setBounds(300, 108, 191, 41);
+		progressBar.setBounds(142, 68, 168, 23);
 		contentPane.add(progressBar);
 		progressBar.setForeground(Color.GRAY);
+		progressBar.setVisible(false);
 
 		btnSelecionarScript = new Button("Selecionar Script");
 		btnSelecionarScript.addActionListener(new ActionListener() {
@@ -193,7 +195,7 @@ public class Principal extends JFrame {
 				selectFile();
 			}
 		});
-		btnSelecionarScript.setBounds(21, 97, 120, 23);
+		btnSelecionarScript.setBounds(21, 39, 105, 23);
 		contentPane.add(btnSelecionarScript);
 
 		btnCarregarScript = new Button("Carregar Script");
@@ -207,19 +209,19 @@ public class Principal extends JFrame {
 			        }).start();
 			}
 		});
-		btnCarregarScript.setBounds(21, 126, 120, 23);
+		btnCarregarScript.setBounds(21, 68, 105, 23);
 		contentPane.add(btnCarregarScript);
 
 		lbTypeColetor = new Label("Tipo de Coletor :");
-		lbTypeColetor.setBounds(21, 64, 273, 21);
+		lbTypeColetor.setBounds(142, 38, 331, 21);
 		contentPane.add(lbTypeColetor);
 
 		textAreaConsole = new TextArea();
-		textAreaConsole.setBounds(21, 410, 470, 202);
+		textAreaConsole.setBounds(21, 373, 470, 165);
 		contentPane.add(textAreaConsole);
 
 		Panel panel = new Panel();
-		panel.setBounds(21, 175, 470, 229);
+		panel.setBounds(21, 155, 470, 212);
 		contentPane.add(panel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
@@ -242,6 +244,10 @@ public class Principal extends JFrame {
 					table.setValueAt("ENVIAR[ ]", i, j);
 				} else if (table.getValueAt(i, j).equals("ENVIAR[ ]") && j == 5) {
 					table.setValueAt("ENVIAR[X]", i, j);
+				}else if(table.getValueAt(i, j).equals("ATUALIZAR[X]") && j == 5){
+					table.setValueAt("ATUALIZAR[ ]", i, j);
+				}else if(table.getValueAt(i, j).equals("ATUALIZAR[ ]") && j == 5){
+					table.setValueAt("ATUALIZAR[X]", i, j);
 				}
 
 			}
@@ -295,6 +301,7 @@ public class Principal extends JFrame {
 	
 	public void btnDescobrir(){
 		getTextAreaConsole().setText("");
+		setDisable(1);
 		DiscoveryNetwork descobrir = new DiscoveryNetwork();
 		descobrir.network();
 	}

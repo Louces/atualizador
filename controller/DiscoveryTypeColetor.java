@@ -39,6 +39,7 @@ public class DiscoveryTypeColetor {
 		switch (pingColetores.getNumeroColetoresValidos()) {
 		case 0:
 			Principal.lbTypeColetor.setText(out + "Nenhum coletor válido");
+			Principal.setEnableBtn(1);
 			return;
 		case 1:
 			coletorUmType=discoveryType(Principal.getTxfColetorUm().getText());

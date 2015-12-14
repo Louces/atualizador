@@ -87,8 +87,10 @@ public class ValidaIP {
 		
 		if((x+y)==3){
 			Console.print("Nº de coletores válidos : 2");	
-		}else{
+		}else if((x+y)!=0){
 			Console.print("Nº de coletores válidos : 1");
+		}else{
+			Console.print("Nº de coletores válidos : 0");
 		}
 				
 		numeroColetoresValidos=x+y;

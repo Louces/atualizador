@@ -21,10 +21,7 @@ public class DiscoveryNetwork {
 	}
 	
 	public void network(){
-		Principal.eraseTable();
-		supervisores.clear();
-		typeColetor.validate();
-		
+		config();
 		Console.print("Descobrido rede...");
 		
 		if(Principal.lbTypeColetor.getText().contains("8886")){
@@ -99,5 +96,11 @@ public class DiscoveryNetwork {
 		tableRow[5]= "ENVIAR[X]";
 		Console.print("Gravando dados na tabela.");
 		Principal.recordTable(tableRow);
+	}
+	
+	public void config(){
+		Principal.eraseTable();
+		supervisores.clear();
+		typeColetor.validate();
 	}
 }

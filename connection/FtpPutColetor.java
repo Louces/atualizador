@@ -21,6 +21,8 @@ public class FtpPutColetor {
 	private File file = Principal.getFileUpgrade();
 
 	public FtpPutColetor(String server) {
+		
+		progressBar.setVisible(true);
 		try {
 			final FTPClient ftp = new FTPClient();
 			ftp.connect(server);
@@ -50,7 +52,7 @@ public class FtpPutColetor {
 			ftp.setCopyStreamListener(streamListener);
 
 			ftp.setFileType(FTP.BINARY_FILE_TYPE);
-			Console.print("Transmitindo dados...");
+			Console.print("Transmitindo " + file.getName() +" para " + server);
 			ftp.storeFile(file.getName(), is);
 			Console.print("Transmissão concluida");
 			System.out.print(ftp.getReplyString());
@@ -62,6 +64,7 @@ public class FtpPutColetor {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	progressBar.setVisible(false);	
 	}
 
 	void setCopyStreamListener(CopyStreamAdapter streamListener) {

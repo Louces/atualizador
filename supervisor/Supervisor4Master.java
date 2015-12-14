@@ -1,6 +1,7 @@
 package supervisor;
 
 import connection.TelnetConnection;
+import controller.Console;
 import controller.FilterCommand;
 import controller.TableInfo;
 
@@ -82,6 +83,7 @@ public class Supervisor4Master implements Supervisor {
 	}
     
 	public void stopSupervisor(TelnetConnection conexao){
+		Console.print("Preparando atualização...");
 		for(int i = 0 ; i<3 ; i++)
 		 conexao.sendCommand("./stopsupervisor.sh");
 	}
