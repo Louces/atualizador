@@ -7,13 +7,10 @@ import view.Principal;
 
 public class UpdateSupervisor {
 
-	@SuppressWarnings("unused")
-	private int nColetores;
 	private String typeColetor;
 	private ArrayList<Object> SPVL;
-
+	
 	public void update() {
-		Principal.configBtn(5, false);
 		config();
 
 		if (typeColetor.contains("8886")) {
@@ -26,8 +23,8 @@ public class UpdateSupervisor {
 			for (Supervisor4Legacy spvl : spvlLegacy) {
 				String SN = spvl.getSerialNumber();
 				int row = TableInfo.getRow(SN);
-				boolean flag = Principal.getTabela().getValueAt(row, 5)
-						.equals("ATUALIZAR[X]");
+				boolean flag = 
+				Principal.getTabela().getValueAt(row, 5).equals("ATUALIZAR[X]");
 
 				if (row != -1 && flag) {
 					Principal.configBtn(5, false);
@@ -38,30 +35,45 @@ public class UpdateSupervisor {
 				}
 
 			}
-
-			if (TableInfo.contains("ATUALIZAR")) {
-				
-				Principal.configBtn(5, true);
-			} else {
-				
-				try {
-					Console.print("Fim do processo de atualização.");
-					Console.print("Liberando para nova atualização em 15 segundos...");
-					Thread.sleep(15000);
-					Principal.getTxfColetorUm().setText("");
-					Principal.getTxfColetorDois().setText("");
-					Principal.configBtn(1, true);
-					Principal.configBtn(5, false);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+			configBTN();
 		}
 	}
 
 	public void config() {
-		nColetores = DiscoveryTypeColetor.getColetoresValidos();
-		typeColetor = DiscoveryTypeColetor.getTypeColetor();
+		Principal.configBtn(3, false);
+		Principal.configBtn(5, false);
+		typeColetor = Info.getTypeColetor();
 		SPVL = DiscoveryNetwork.getSupervisores();
 	}
+	
+	public void configBTN(){
+		if(TableInfo.contains("ATUALIZAR")||TableInfo.contains("ENVIAR")) {
+			
+			if(TableInfo.contains("ATUALIZAR")){
+				Principal.configBtn(5, true);
+			}else{
+				Principal.configBtn(5, false);	
+			}
+			
+			if(TableInfo.contains("ENVIAR")){
+				Principal.configBtn(3, true);	
+			}else{
+				Principal.configBtn(3, false);
+			}
+			
+		}else{
+			try {
+				Console.print("Fim do processo de atualização.");
+				Principal.setDisableAll();
+				Principal.getTxfColetorUm().setText("");
+				Principal.getTxfColetorDois().setText("");
+				Thread.sleep(15000);
+				Principal.configBtn(1, true);
+				Principal.configColetores(3);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }

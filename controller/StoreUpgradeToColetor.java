@@ -5,15 +5,12 @@ import connection.FtpPutColetor;
 import connection.TelnetConnection;
 
 public class StoreUpgradeToColetor {
-	private static int nColetores = DiscoveryTypeColetor.getColetoresValidos();
-	private static String serverOne = Principal.getTxfColetorUm().getText();
-	private static String serverTwo = Principal.getTxfColetorDois().getText();
 	private static String md5;
 	private static boolean sucess;
-	private static boolean sucessColetorOne,sucessColetorTwo;
+	private static boolean sucessColetorOne, sucessColetorTwo;
 	@SuppressWarnings("unused")
 	private static FtpPutColetor put;
-
+	
 	public static boolean isSucess() {
 		return sucess;
 	}
@@ -23,8 +20,13 @@ public class StoreUpgradeToColetor {
 	}
 	
 	public static void store() {
+
 		if (Principal.lbTypeColetor.getText().contains("888")) {
-			switch (nColetores) {
+			
+			int coletores = Info.getnColetoresValidos();
+			coletores=configStore8886(coletores);
+			
+			switch (coletores) {
 			case 1:
 				putFTPColetor(1);
 				break;
@@ -36,50 +38,90 @@ public class StoreUpgradeToColetor {
 				break;
 
 			default:
-			break;
+				Principal.configBtn(2, false);
+				return;
 			}
-		configSucess();
+		
+			if(TableInfo.contains("ENVIAR")){
+				Principal.configBtn(3, true);
+			}else{
+				Principal.configBtn(3, false);
+			}
+			
 		}
 	}
-
-	public static void putFTPColetor(int coletor) {
+	
+	public static void putFTPColetor(int coletores) {
 		Principal.configBtn(2, false);
 		Principal.configBtn(3, false);
-		switch (coletor) {
+		Principal.configBtn(5, false);
+		
+		switch (coletores) {
 		case 1:
-			put = new FtpPutColetor(serverOne);
-			sucessColetorOne=ckeckFile(coletor);
+			put = new FtpPutColetor(Info.getColetorOne());
+			sucessColetorOne=ckeckFile(coletores);
 			break;
 		case 2:
-			put = new FtpPutColetor(serverTwo);
-			sucessColetorTwo=(ckeckFile(coletor));
+			put = new FtpPutColetor(Info.getColetorTwo());
+			sucessColetorTwo=(ckeckFile(coletores));
 			break;
 		case 3:
-			put = new FtpPutColetor(serverOne);
+			put = new FtpPutColetor(Info.getColetorOne());
 			sucessColetorOne=ckeckFile(1);
-			put = new FtpPutColetor(serverTwo);
+			put = new FtpPutColetor(Info.getColetorTwo());
 			sucessColetorTwo=(ckeckFile(2));
 			break;
 		default:
 		break;
 		}
-	Principal.configBtn(2, true);	
+	configSucess(coletores);
 	}
 	
-	public static void configSucess() {
-		if (nColetores == 1) {
+	public static int configStore8886(int coletor){
+		
+		if (coletor == 1) {
+			int row = TableInfo.getRow(Info.getSnColetorOne());
+			boolean flag = Principal.getTabela().getValueAt(row, 5).equals("ENVIAR[X]");
+			if (flag)
+				return 1;
+		} else if (coletor == 2) {
+			int row = TableInfo.getRow(Info.getSnColetorTwo());
+			boolean flag = Principal.getTabela().getValueAt(row, 5).equals("ENVIAR[X]");
+			if (flag)
+				return 2;
+		} else if (coletor == 3) {
+			int rowOne = TableInfo.getRow(Info.getSnColetorOne());
+			int rowTwo = TableInfo.getRow(Info.getSnColetorTwo());
+			boolean flagOne = Principal.getTabela().getValueAt(rowOne, 5).equals("ENVIAR[X]");
+			boolean flagTwo = Principal.getTabela().getValueAt(rowTwo, 5).equals("ENVIAR[X]");
+
+			if (flagOne && !flagTwo) {
+				return 1;
+			} else if (!flagOne && flagTwo) {
+				return 2;
+			} else if (flagOne && flagTwo) {
+				return 3;
+			}else{
+				return 0;
+			}
+		}
+		return 0;
+	}
+	
+	public static void configSucess(int coletores) {
+		if (coletores == 1) {
 			if (sucessColetorOne){
 				setSucess(true);
 			}else{
 				setSucess(false);
 			}
-		} else if (nColetores == 2) {
+		} else if (coletores == 2) {
 			if (sucessColetorTwo){
 				setSucess(true);
 			}else{
 				setSucess(false);
 			}
-		} else if (nColetores == 3) {
+		} else if (coletores == 3) {
 			if (sucessColetorOne && sucessColetorTwo){
 				setSucess(true);
 			}else{
@@ -87,7 +129,7 @@ public class StoreUpgradeToColetor {
 			}
 		}
 	configBTN();
-	refreshTable();
+	refreshTable(coletores);
 	}
 
 	public static boolean ckeckFile(int coletor) {
@@ -117,32 +159,33 @@ public class StoreUpgradeToColetor {
 	public static void connectColetor(int coletor) {
 		TelnetConnection telnet;
 		
-		if (coletor == 1)
-			telnet = new TelnetConnection(serverOne);
-		else
-			telnet = new TelnetConnection(serverTwo);
-
+		if (coletor == 1){
+			telnet = new TelnetConnection(Info.getColetorOne());
+		}else{
+			telnet = new TelnetConnection(Info.getColetorTwo());
+		}
+			
 		telnet.connectVlan100();
 		Console.print("Obtendo MD5 do arquivo transferido...");
 		md5 = telnet.sendCommand("md5sum "+ Principal.getFileUpgrade().getName() + "| awk '{print $1}'");
 		telnet.closeSession();
 	}
 	
-	public static void refreshTable() {
-		switch (nColetores) {
+	public static void refreshTable(int coletores) {
+		switch (coletores) {
 		case 1:
-			TableInfo.refresh(Strings.getSnColetorOne(), 4,"Aquardando atualização");
-			TableInfo.refresh(Strings.getSnColetorOne(), 5,"ATUALIZAR[X]");
+			TableInfo.refresh(Info.getSnColetorOne(), 4,"Aquardando atualização");
+			TableInfo.refresh(Info.getSnColetorOne(), 5,"ATUALIZAR[X]");
 			break;
 		case 2:
-			TableInfo.refresh(Strings.getSnColetorTwo(), 4,"Aquardando atualização");
-			TableInfo.refresh(Strings.getSnColetorTwo(), 5,"ATUALIZAR[X]");
+			TableInfo.refresh(Info.getSnColetorTwo(), 4,"Aquardando atualização");
+			TableInfo.refresh(Info.getSnColetorTwo(), 5,"ATUALIZAR[X]");
 			break;
 		case 3:
-			TableInfo.refresh(Strings.getSnColetorOne(), 4,"Aquardando atualização");
-			TableInfo.refresh(Strings.getSnColetorOne(), 5,"ATUALIZAR[X]");
-			TableInfo.refresh(Strings.getSnColetorTwo(), 4,"Aquardando atualização");
-			TableInfo.refresh(Strings.getSnColetorTwo(), 5,"ATUALIZAR[X]");
+			TableInfo.refresh(Info.getSnColetorOne(), 4,"Aquardando atualização");
+			TableInfo.refresh(Info.getSnColetorOne(), 5,"ATUALIZAR[X]");
+			TableInfo.refresh(Info.getSnColetorTwo(), 4,"Aquardando atualização");
+			TableInfo.refresh(Info.getSnColetorTwo(), 5,"ATUALIZAR[X]");
 		default:
 			break;
 		}
@@ -150,9 +193,13 @@ public class StoreUpgradeToColetor {
 	
 	public static void configBTN(){
 		if(isSucess()){
-			if(DiscoveryTypeColetor.getTypeColetor().equals("8886")){
+			if(Info.getTypeColetor().equals("8886")&&!TableInfo.contains("ENVIAR")){
 				Principal.configBtn(2, false);
 				Principal.configBtn(3, false);
+				Principal.configBtn(5, true);
+			}else{
+				Principal.configBtn(2, false);
+				Principal.configBtn(3, true);
 				Principal.configBtn(5, true);
 			}
 		}else{

@@ -10,50 +10,31 @@ public class DiscoveryTypeColetor {
 	private ValidaIP pingColetores = new ValidaIP();
 	private TelnetConnection conexao;
 	private static int numeroVlans;
-	private static int coletoresValidos;
 	private String coletorUmType, coletorDoisType;
-	private static String typeColetor; 
 	private String out = "Tipo de Coletor : ";
 	
-	public static String getTypeColetor() {
-		return typeColetor;
-	}
-
-	public static void setTypeColetor(String typeColetor) {
-		DiscoveryTypeColetor.typeColetor = typeColetor;
-	}
-
-	public static int getColetoresValidos() {
-		return coletoresValidos;
-	}
-
-	public static void setColetoresValidos(int coletoresValidos) {
-		DiscoveryTypeColetor.coletoresValidos = coletoresValidos;
-	}
-
 	public void validate() {
 		Console.print("Descobrindo o Nº de coletores válidos.");
 		pingColetores.setNumeroColetoresValidos();
-		setColetoresValidos(pingColetores.getNumeroColetoresValidos());
-
-		switch (pingColetores.getNumeroColetoresValidos()) {
+	
+		switch (Info.getnColetoresValidos()) {
 		case 0:
 			Principal.lbTypeColetor.setText(out + "Nenhum coletor válido");
 			Principal.setEnableBtn(1);
 			return;
 		case 1:
-			coletorUmType=discoveryType(Principal.getTxfColetorUm().getText());
+			coletorUmType=discoveryType(Info.getColetorOne());
 			break;
 		case 2:
-			coletorDoisType=discoveryType(Principal.getTxfColetorDois().getText());
+			coletorDoisType=discoveryType(Info.getColetorTwo());
 			break;
 		case 3:
-			coletorUmType=discoveryType(Principal.getTxfColetorUm().getText());
-			coletorDoisType=discoveryType(Principal.getTxfColetorDois().getText());
+			coletorUmType=discoveryType(Info.getColetorOne());
+			coletorDoisType=discoveryType(Info.getColetorTwo());
 			break;
 		}
 	config();
-	Console.print("Tipo : " + getTypeColetor());
+	Console.print("Tipo : " + Info.getTypeColetor());
 	}
 
 	public String discoveryType(String server) {
@@ -73,33 +54,35 @@ public class DiscoveryTypeColetor {
 			}
 		
 		if(numeroVlans==1){
-			setTypeColetor("8886");
+			Info.setTypeColetor("8886");
 			return "8886";
 		}else if(numeroVlans==6){
-			setTypeColetor("8887");
+			Info.setTypeColetor("8887");
 			return "8887";
 		}else{
+			Info.setTypeColetor("Indefinido");
 			return "Indefinido";
 		}
 	}
 	
-	public void config(){
+	public void config() {
 		switch (pingColetores.getNumeroColetoresValidos()) {
 		case 1:
 			Principal.lbTypeColetor.setText(out + coletorUmType);
-			setTypeColetor(coletorUmType);
+			Info.setTypeColetor(coletorUmType);
 			break;
 		case 2:
 			Principal.lbTypeColetor.setText(out + coletorDoisType);
-			setTypeColetor(coletorDoisType);
+			Info.setTypeColetor(coletorDoisType);
+			Info.setTypeColetor(coletorDoisType);
 			break;
 		case 3:
-			if (coletorUmType.equals(coletorDoisType)){
+			if (coletorUmType.equals(coletorDoisType)) {
 				Principal.lbTypeColetor.setText(out + coletorUmType);
-				setTypeColetor(coletorUmType);
-			}else{
-			Principal.lbTypeColetor.setText(out +" Coletores distintos");
-			setTypeColetor("Coletores distintos");
+				Info.setTypeColetor(coletorUmType);
+			} else {
+				Principal.lbTypeColetor.setText(out + " Coletores distintos");
+				Info.setTypeColetor("Coletores distintos");
 			}
 			break;
 		}

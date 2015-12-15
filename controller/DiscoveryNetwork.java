@@ -7,8 +7,6 @@ import view.Principal;
 import connection.TelnetConnection;
 
 public class DiscoveryNetwork {
-    private String serverUm = Principal.getTxfColetorUm().getText();
-    private String serverDois = Principal.getTxfColetorDois().getText();
     private DiscoveryTypeColetor typeColetor = new DiscoveryTypeColetor();
 	private static ArrayList<Object> supervisores = new ArrayList<Object>();
 	
@@ -25,16 +23,16 @@ public class DiscoveryNetwork {
 		Console.print("Descobrido rede...");
 		
 		if(Principal.lbTypeColetor.getText().contains("8886")){
-			switch (DiscoveryTypeColetor.getColetoresValidos()) {
+			switch (Info.getnColetoresValidos()) {
 			case 1:
-				gravaSupervisor8886(serverUm,1);
+				gravaSupervisor8886(Info.getColetorOne(),1);
 				break;
 			case 2:
-				gravaSupervisor8886(serverDois,1);
+				gravaSupervisor8886(Info.getColetorTwo(),2);
 				break;
 			case 3:
-				gravaSupervisor8886(serverUm,1);
-				gravaSupervisor8886(serverDois,2);
+				gravaSupervisor8886(Info.getColetorOne(),1);
+				gravaSupervisor8886(Info.getColetorTwo(),2);
 				break;
 			default:
 			break;
@@ -82,10 +80,15 @@ public class DiscoveryNetwork {
 		
 		if (coletor == 1){
 			spvl = (Supervisor4Legacy) supervisores.get(0);
-			Strings.setSnColetorOne(spvl.getSerialNumber());
+			Info.setSnColetorOne(spvl.getSerialNumber());
 		}else{
-			spvl = (Supervisor4Legacy) supervisores.get(1);
-			Strings.setSnColetorTwo(spvl.getSerialNumber());
+			if(supervisores.size()==1){
+				spvl = (Supervisor4Legacy) supervisores.get(0);	
+			}else{
+				spvl = (Supervisor4Legacy) supervisores.get(1);
+			}
+			
+			Info.setSnColetorTwo(spvl.getSerialNumber());
 		}
 				
 		tableRow[0]= spvl.getId();

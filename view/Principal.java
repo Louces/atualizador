@@ -8,6 +8,7 @@ import java.awt.Label;
 import java.awt.Panel;
 import java.awt.TextArea;
 import java.awt.TextField;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -132,59 +133,57 @@ public class Principal extends JFrame {
 	 * Create the frame.
 	 */
 	public Principal() {
-
 		initComponents();
 		monitoringIP();
-		// configBtn(1);
-
 	}
 
 	private void initComponents() {
-
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/padtec_icone.png")));
+		
 		setResizable(false);
-		setTitle("Padtec");
+		setTitle("Padtec S/A - V1.7.0");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 518, 578);
+		setBounds(100, 100, 494, 578);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
 		lbColetorUm = new Label("Coletor 1");
-		lbColetorUm.setBounds(142, 10, 57, 22);
+		lbColetorUm.setBounds(131, 10, 57, 22);
 		contentPane.add(lbColetorUm);
 
 		lbColetorDois = new Label("Coletor 2");
-		lbColetorDois.setBounds(316, 10, 57, 22);
+		lbColetorDois.setBounds(305, 10, 57, 22);
 		contentPane.add(lbColetorDois);
 
 		txfColetorDois = new TextField();
-		txfColetorDois.setBounds(384, 10, 105, 22);
+		txfColetorDois.setBounds(373, 10, 105, 22);
 		contentPane.add(txfColetorDois);
 
 		txfColetorUm = new TextField();
-		txfColetorUm.setBounds(205, 10, 105, 22);
+		txfColetorUm.setBounds(194, 10, 105, 22);
 		contentPane.add(txfColetorUm);
 		txfColetorUm.setText("172.30.0.235");
 
 		btnDescobrir = new Button("Descobrir");
-		btnDescobrir.setBounds(21, 10, 105, 23);
+		btnDescobrir.setBounds(10, 10, 105, 23);
 		contentPane.add(btnDescobrir);
 
 		btnEviarScript = new Button("Enviar Script");
-		btnEviarScript.setBounds(21, 97, 105, 23);
+		btnEviarScript.setBounds(10, 97, 105, 23);
 		contentPane.add(btnEviarScript);
 
 		btnAtualizar = new Button("Atualizar");
-		btnAtualizar.setBounds(21, 126, 105, 23);
+		btnAtualizar.setBounds(10, 126, 105, 23);
 		contentPane.add(btnAtualizar);
 
 		progressBar = new JProgressBar();
 		progressBar.setEnabled(true);
 		progressBar.setStringPainted(true);
 		progressBar.setFont(new Font("Arial Black", Font.BOLD, 14));
-		progressBar.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-		progressBar.setBounds(142, 68, 168, 23);
+		progressBar.setBorder(new LineBorder(new Color(0, 0, 0)));
+		progressBar.setBounds(131, 68, 122, 52);
 		contentPane.add(progressBar);
 		progressBar.setForeground(Color.GRAY);
 		progressBar.setVisible(false);
@@ -195,7 +194,7 @@ public class Principal extends JFrame {
 				selectFile();
 			}
 		});
-		btnSelecionarScript.setBounds(21, 39, 105, 23);
+		btnSelecionarScript.setBounds(10, 39, 105, 23);
 		contentPane.add(btnSelecionarScript);
 
 		btnCarregarScript = new Button("Carregar Script");
@@ -209,22 +208,24 @@ public class Principal extends JFrame {
 			        }).start();
 			}
 		});
-		btnCarregarScript.setBounds(21, 68, 105, 23);
+		btnCarregarScript.setBounds(10, 68, 105, 23);
 		contentPane.add(btnCarregarScript);
 
-		lbTypeColetor = new Label("Tipo de Coletor :");
-		lbTypeColetor.setBounds(142, 38, 331, 21);
+		lbTypeColetor = new Label("Tipo de Coletor : ");
+		lbTypeColetor.setBounds(131, 38, 331, 21);
 		contentPane.add(lbTypeColetor);
 
 		textAreaConsole = new TextArea();
-		textAreaConsole.setBounds(21, 373, 470, 165);
+		textAreaConsole.setBounds(10, 373, 470, 165);
 		contentPane.add(textAreaConsole);
 
 		Panel panel = new Panel();
-		panel.setBounds(21, 155, 470, 212);
+		panel.setFocusTraversalKeysEnabled(false);
+		panel.setFocusable(false);
+		panel.setBounds(10, 155, 470, 212);
 		contentPane.add(panel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.addMouseListener(new MouseAdapter() {
 
@@ -409,7 +410,7 @@ public class Principal extends JFrame {
 	public static JProgressBar getProgressBar() {
 		return progressBar;
 	}
-
+	
 	public File selectFile() {
 		textAreaConsole.setText("");
 		FileChooser fileChooser = new FileChooser(null);
@@ -437,5 +438,28 @@ public class Principal extends JFrame {
 	}
 	public static TextArea getTextAreaConsole() {
 		return textAreaConsole;
+	}
+	
+	public static void configColetores(int coletores){
+		switch (coletores) {
+		case 1:
+			lbColetorDois.setVisible(false);
+			txfColetorDois.setVisible(false);
+			break;
+		case 2:
+			lbColetorUm.setVisible(false);
+			txfColetorUm.setVisible(false);
+			break;
+		case 3:
+			lbColetorUm.setVisible(true);
+			txfColetorUm.setVisible(true);
+			lbColetorDois.setVisible(true);
+			txfColetorDois.setVisible(true);
+			break;
+			
+
+		default:
+			break;
+		}
 	}
 }

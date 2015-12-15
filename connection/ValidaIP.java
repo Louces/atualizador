@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 import controller.Console;
+import controller.Info;
 import view.Principal;
 
 public class ValidaIP {
@@ -25,9 +26,9 @@ public class ValidaIP {
 			InetAddress inet;
 
 			if (coletor == 1)
-				inet = InetAddress.getByName(Principal.getTxfColetorUm().getText());
+				inet = InetAddress.getByName(Info.getColetorOne());
 			else
-				inet = InetAddress.getByName(Principal.getTxfColetorDois().getText());
+				inet = InetAddress.getByName(Info.getColetorTwo());
 
 			if (inet.isReachable(5000)) {
 				setAddressIP(inet.toString());
@@ -60,10 +61,10 @@ public class ValidaIP {
 								Principal.getLbColetorDois().setBackground(Color.green);
 						} else {
 							if (coletor == 1) {
-								if (!Principal.getTxfColetorUm().getText().isEmpty())
+								if (!Info.getColetorOne().isEmpty())
 									Principal.getLbColetorUm().setBackground(Color.red);
 							} else {
-								if (!Principal.getTxfColetorDois().getText().isEmpty())
+								if (!Info.getColetorTwo().isEmpty())
 									Principal.getLbColetorDois().setBackground(Color.red);
 							}
 						}
@@ -82,8 +83,14 @@ public class ValidaIP {
 
 	public void setNumeroColetoresValidos() {
 		int x=0, y=0;
-		if(ping(1)){x=1;}
-		if(ping(2)){y=2;}
+		
+		if(Info.getColetorOne().equals(Info.getColetorTwo())){
+			if(ping(1)){x=1;}
+		}else{
+			if(ping(1)){x=1;}
+			if(ping(2)){y=2;}	
+		}
+		
 		
 		if((x+y)==3){
 			Console.print("Nº de coletores válidos : 2");	
@@ -94,5 +101,7 @@ public class ValidaIP {
 		}
 				
 		numeroColetoresValidos=x+y;
+		Info.setnColetoresValidos(numeroColetoresValidos);
+		Principal.configColetores(numeroColetoresValidos);
 	}
 }
