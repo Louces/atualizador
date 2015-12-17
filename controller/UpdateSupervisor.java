@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import supervisor.Supervisor4Legacy;
@@ -64,10 +65,13 @@ public class UpdateSupervisor {
 		}else{
 			try {
 				Console.print("Fim do processo de atualização.");
+				Console.print("Liberando para nova atualização em 15s.");
 				Principal.setDisableAll();
 				Principal.getTxfColetorUm().setText("");
 				Principal.getTxfColetorDois().setText("");
 				Thread.sleep(15000);
+				Principal.getLbColetorUm().setBackground(Color.gray);
+				Principal.getLbColetorDois().setBackground(Color.gray);
 				Principal.configBtn(1, true);
 				Principal.configColetores(3);
 			} catch (InterruptedException e) {

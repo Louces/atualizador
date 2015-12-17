@@ -25,14 +25,14 @@ public class DiscoveryNetwork {
 		if(Principal.lbTypeColetor.getText().contains("8886")){
 			switch (Info.getnColetoresValidos()) {
 			case 1:
-				gravaSupervisor8886(Info.getColetorOne(),1);
+				gravaSupervisor8886(1);
 				break;
 			case 2:
-				gravaSupervisor8886(Info.getColetorTwo(),2);
+				gravaSupervisor8886(2);
 				break;
 			case 3:
-				gravaSupervisor8886(Info.getColetorOne(),1);
-				gravaSupervisor8886(Info.getColetorTwo(),2);
+				gravaSupervisor8886(1);
+				gravaSupervisor8886(2);
 				break;
 			default:
 			break;
@@ -48,11 +48,19 @@ public class DiscoveryNetwork {
 		Console.print("Rede descoberta.");	
 	}
 	
-	public void gravaSupervisorLegado(String server){
+	public void gravaSupervisorLegado(int server){
 		String comando;
 		Supervisor4Legacy spvl = new Supervisor4Legacy();
-		TelnetConnection conexao = new TelnetConnection(server);
-		conexao.connectVlan100();
+		
+		TelnetConnection conexao ;
+		if(server==1){
+			conexao = Info.getServerOne();
+			spvl.setColetor(1);
+		}else{
+			conexao = Info.getServerTwo();
+			spvl.setColetor(2);
+		}
+		
 		Console.print("Apagando arquivos remanescentes...");
 		conexao.sendCommand("rm *upgrade*");
 	    conexao.sendCommand("rm -rf *bkp*");
@@ -66,19 +74,17 @@ public class DiscoveryNetwork {
 		comando = conexao.sendCommand
 		("./supervisor -v | awk '{print $2}'");
 		spvl.setVersaoAplicacao(FilterCommand.filter(comando).replaceFirst("V", ""));
-		spvl.setIpVLAN100(server);
 		spvl.setStatus("Descoberto");
-		conexao.closeSession();
 		Console.print("Adicionando dados...");
 		supervisores.add(spvl);
 	}
     
-	public void gravaSupervisor8886(String server, int coletor){
+	public void gravaSupervisor8886(int server){
 		gravaSupervisorLegado(server);
 		String[] tableRow = new String[6];
 		Supervisor4Legacy spvl = new Supervisor4Legacy();
 		
-		if (coletor == 1){
+		if (server == 1){
 			spvl = (Supervisor4Legacy) supervisores.get(0);
 			Info.setSnColetorOne(spvl.getSerialNumber());
 		}else{

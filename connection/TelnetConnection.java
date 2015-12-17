@@ -11,7 +11,7 @@ public class TelnetConnection {
 	private PrintStream out;
 	private char prompt = '$';
 	private String server;
-
+	
 	public TelnetConnection(String server) {
 		setServer(server);
 	}
@@ -121,8 +121,7 @@ public class TelnetConnection {
 					if (sb.toString().endsWith(pattern)){
 						return sb.toString();
 					}
-						
-
+		
 				ch = (char) in.read();
 			}
 		} catch (Exception e) {

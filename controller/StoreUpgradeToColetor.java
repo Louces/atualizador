@@ -160,15 +160,13 @@ public class StoreUpgradeToColetor {
 		TelnetConnection telnet;
 		
 		if (coletor == 1){
-			telnet = new TelnetConnection(Info.getColetorOne());
+			telnet = Info.getServerOne();
 		}else{
-			telnet = new TelnetConnection(Info.getColetorTwo());
+			telnet = Info.getServerTwo();
 		}
 			
-		telnet.connectVlan100();
 		Console.print("Obtendo MD5 do arquivo transferido...");
 		md5 = telnet.sendCommand("md5sum "+ Principal.getFileUpgrade().getName() + "| awk '{print $1}'");
-		telnet.closeSession();
 	}
 	
 	public static void refreshTable(int coletores) {

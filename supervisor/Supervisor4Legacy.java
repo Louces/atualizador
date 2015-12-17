@@ -3,6 +3,7 @@ package supervisor;
 import view.Principal;
 import connection.TelnetConnection;
 import controller.Console;
+import controller.Info;
 import controller.TableInfo;
 
 public class Supervisor4Legacy extends Supervisor4Master {
@@ -14,9 +15,10 @@ public class Supervisor4Legacy extends Supervisor4Master {
 	private String status;
 	private String nameScript;
 	private boolean flag;
+	private int coletor;
 
 	public boolean Update() {
-		connect(getIpVLAN100());
+		connect();
 		stopSupervisor(conexao);
 		Console.print("Iniciando atualização em : " + getSerialNumber());
 		nameScript = Principal.getFileUpgrade().getName();
@@ -35,6 +37,7 @@ public class Supervisor4Legacy extends Supervisor4Master {
 				Console.print("Fim da atualização...");
 				if (status.contains(msnNoSpace)) {
 					Console.print("Atualização falhou devido a falta de espaço.");
+					TableInfo.refresh(getSerialNumber(), 4, "Falta de espaço.");
 					conexao.closeSession();
 					return false;
 				}
@@ -73,9 +76,20 @@ public class Supervisor4Legacy extends Supervisor4Master {
 		}
 	}
 	
-	public void connect(String server){
-		conexao = new TelnetConnection(server);
-		conexao.connectVlan100();
+	public void connect(){
+		if(getColetor()==1){
+			conexao = Info.getServerOne();
+		}else{
+			conexao = Info.getServerTwo();
+		}
+	}
+
+	public int getColetor() {
+		return coletor;
+	}
+
+	public void setColetor(int coletor) {
+		this.coletor = coletor;
 	}
 	
 

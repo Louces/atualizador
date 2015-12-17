@@ -31,7 +31,6 @@ public class FtpPutColetor {
 			System.out.println("Connected to " + server);
 			System.out.print(ftp.getReplyString());
 			
-			
 			InputStream is = new FileInputStream(file.getAbsolutePath());
 			
 			CopyStreamAdapter streamListener = new CopyStreamAdapter() {
@@ -40,12 +39,9 @@ public class FtpPutColetor {
 				public void bytesTransferred
 				(long totalBytesTransferred,int bytesTransferred, long streamSize) {
 					
-					
 					int percent = (int) (totalBytesTransferred * 100 / file.length());
-					
 					progressBar.setValue(percent);
 					progressBar.setString(percent + "%");
-
 				}
 			};
 

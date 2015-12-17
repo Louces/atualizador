@@ -53,7 +53,7 @@ public class ValidaIP {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(10000);
+						Thread.sleep(15000);
 						if (ping(coletor)) {
 							if (coletor == 1)
 								Principal.getLbColetorUm().setBackground(Color.green);

@@ -8,7 +8,7 @@ import connection.ValidaIP;
 public class DiscoveryTypeColetor {
 
 	private ValidaIP pingColetores = new ValidaIP();
-	private TelnetConnection conexao;
+	public static TelnetConnection conexao;
 	private static int numeroVlans;
 	private String coletorUmType, coletorDoisType;
 	private String out = "Tipo de Coletor : ";
@@ -23,29 +23,34 @@ public class DiscoveryTypeColetor {
 			Principal.setEnableBtn(1);
 			return;
 		case 1:
-			coletorUmType=discoveryType(Info.getColetorOne());
+			coletorUmType=discoveryType(1);
 			break;
 		case 2:
-			coletorDoisType=discoveryType(Info.getColetorTwo());
+			coletorDoisType=discoveryType(2);
 			break;
 		case 3:
-			coletorUmType=discoveryType(Info.getColetorOne());
-			coletorDoisType=discoveryType(Info.getColetorTwo());
+			coletorUmType=discoveryType(1);
+			coletorDoisType=discoveryType(2);
 			break;
 		}
 	config();
 	Console.print("Tipo : " + Info.getTypeColetor());
 	}
 
-	public String discoveryType(String server) {
-		conexao = new TelnetConnection(server);
+	public String discoveryType(int server) {
+		
+		if(server==1){
+			conexao = new TelnetConnection(Info.getColetorOne());
+			Info.setServerOne(conexao);
+		}else{
+			conexao = new TelnetConnection(Info.getColetorTwo());
+			Info.setServerTwo(conexao);
+		}
 		conexao.connectVlan100();
 		
 		Console.print("Descobrindo o tipo de coletor.");
 		String comando = conexao.sendCommand
 		("ifconfig | grep eth0. | wc | awk '{print $1}'");
-
-		conexao.closeSession();
 
 		for (int i = 0; i < comando.length() - 1; i++)
 			if (comando.charAt(i) == '\n') {

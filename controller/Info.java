@@ -1,5 +1,6 @@
 package controller;
 
+import connection.TelnetConnection;
 import view.Principal;
 
 public class Info {
@@ -9,7 +10,24 @@ public class Info {
 	private static String snColetorTwo;
 	private static String typeColetor;
 	private static int nColetoresValidos;
+	private static TelnetConnection serverOne;
+	private static TelnetConnection serverTwo;
 	
+	public static void setServerOne(TelnetConnection server){
+		serverOne=server;
+	}
+	
+	public static TelnetConnection getServerOne(){
+		return serverOne;
+	}
+	
+	public static void setServerTwo(TelnetConnection server){
+		serverTwo=server;
+	}
+	
+	public static TelnetConnection getServerTwo(){
+		return serverTwo;
+	}
 	
 	public static String getSnColetorOne() {
 		return snColetorOne;

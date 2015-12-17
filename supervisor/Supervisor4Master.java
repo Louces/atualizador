@@ -13,7 +13,7 @@ public class Supervisor4Master implements Supervisor {
 	private String versaoAplicacao;
 	private int numeroScravos;
 	private int numeroSPVL90;
-	private String ipVLAN100;
+	//private String ipVLAN100;
 	private String status;
 	
 	//private TelnetConnection conexao;
@@ -26,13 +26,13 @@ public class Supervisor4Master implements Supervisor {
 		this.status = status;
 	}
 
-	public String getIpVLAN100() {
+	/*public String getIpVLAN100() {
 		return ipVLAN100;
 	}
 
 	public void setIpVLAN100(String ipVLAN100) {
 		this.ipVLAN100 = ipVLAN100;
-	}
+	}*/
 
 	public String getSerialNumber() {
 		return serialNumber;
