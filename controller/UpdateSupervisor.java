@@ -29,7 +29,7 @@ public class UpdateSupervisor {
 
 				if (row != -1 && flag) {
 					Principal.configBtn(5, false);
-					spvl.Update();
+					spvl.update();
 				} else {
 					Principal.configBtn(5, true);
 					continue;

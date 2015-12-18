@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 
 import supervisor.Supervisor4Legacy;
+import supervisor.Supervisor4Master;
 import view.Principal;
 import connection.TelnetConnection;
 
@@ -42,17 +43,18 @@ public class DiscoveryNetwork {
 		
 		}else if(Principal.lbTypeColetor.getText().contains("8887")){
 			
+			
+			
 		}else{
 			
 		}
 		Console.print("Rede descoberta.");	
 	}
 	
-	public void gravaSupervisorLegado(int server){
-		String comando;
+	public void supervisorLegado(int server){
+		TelnetConnection conexao ;
 		Supervisor4Legacy spvl = new Supervisor4Legacy();
 		
-		TelnetConnection conexao ;
 		if(server==1){
 			conexao = Info.getServerOne();
 			spvl.setColetor(1);
@@ -61,6 +63,7 @@ public class DiscoveryNetwork {
 			spvl.setColetor(2);
 		}
 		
+		String comando;
 		Console.print("Apagando arquivos remanescentes...");
 		conexao.sendCommand("rm *upgrade*");
 	    conexao.sendCommand("rm -rf *bkp*");
@@ -80,7 +83,7 @@ public class DiscoveryNetwork {
 	}
     
 	public void gravaSupervisor8886(int server){
-		gravaSupervisorLegado(server);
+		supervisorLegado(server);
 		String[] tableRow = new String[6];
 		Supervisor4Legacy spvl = new Supervisor4Legacy();
 		
@@ -96,7 +99,8 @@ public class DiscoveryNetwork {
 			
 			Info.setSnColetorTwo(spvl.getSerialNumber());
 		}
-				
+		
+		//tableRow[-1]= Nome do NE
 		tableRow[0]= spvl.getId();
 		tableRow[1]= spvl.getSerialNumber();
 		tableRow[2]= "Mestre";
@@ -105,6 +109,27 @@ public class DiscoveryNetwork {
 		tableRow[5]= "ENVIAR[X]";
 		Console.print("Gravando dados na tabela.");
 		Principal.recordTable(tableRow);
+	}
+	
+	public void supervisor4(int server){
+		TelnetConnection conexao;
+		Supervisor4Master spvl = new Supervisor4Master();
+		
+		if(server==1){
+			conexao = Info.getServerOne();
+			spvl.setColetor(1);
+		}else{
+			conexao = Info.getServerTwo();
+			spvl.setColetor(2);
+		}
+	}
+	
+	public void gravaSupervisor8887(int server){
+		
+	}
+	
+	public void connect(){
+		
 	}
 	
 	public void config(){

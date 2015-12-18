@@ -8,16 +8,12 @@ import controller.TableInfo;
 
 public class Supervisor4Legacy extends Supervisor4Master {
 	private TelnetConnection conexao;
-	private final String msgEndUpgrade = "Fim do processo de upgrade";
-	private final String msnNoSpace = "nao possui espaco suficiente para realizar esta atualizacao";
-	private final String msgSyslogChange = "Syslog modificado";
-	private final String msgSyslognNoChange = "Syslog nao precisa de modificacao";
 	private String status;
 	private String nameScript;
 	private boolean flag;
-	private int coletor;
-
-	public boolean Update() {
+	
+	@Override
+	public boolean update() {
 		connect();
 		stopSupervisor(conexao);
 		Console.print("Iniciando atualização em : " + getSerialNumber());
@@ -55,14 +51,14 @@ public class Supervisor4Legacy extends Supervisor4Master {
 						Console.print("Atualizando tabela");
 						refreshTable(conexao);
 						Console.print("Reiniciando a unidade");
-						conexao.sendCommand("reboot");
+						conexao.sendCommand("nohup reboot");
 						return true;
 					} else if (status.contains(msgSyslognNoChange)) {
 						conexao.sendCommand("rm " + nameScript);
 						Console.print("Atualizando tabela");
 						refreshTable(conexao);
 						Console.print("Reiniciando a unidade");
-						conexao.sendCommand("reboot");
+						conexao.sendCommand("nohup reboot");
 						return true;
 					} else {
 						Console.print("Aguarde 4 segundos.");
@@ -84,13 +80,7 @@ public class Supervisor4Legacy extends Supervisor4Master {
 		}
 	}
 
-	public int getColetor() {
-		return coletor;
-	}
-
-	public void setColetor(int coletor) {
-		this.coletor = coletor;
-	}
+	
 	
 
 }

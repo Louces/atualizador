@@ -2,6 +2,6 @@ package supervisor;
 
 public interface Supervisor {
 	
-	public boolean atualizarAplicacao();
+	public boolean update();
 	
 }

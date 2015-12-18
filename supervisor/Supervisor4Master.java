@@ -7,12 +7,22 @@ import controller.TableInfo;
 
 public class Supervisor4Master implements Supervisor {
 
+	protected final String msgEndUpgrade = "Fim do processo de upgrade";
+	protected final String msnNoSpace = "nao possui espaco suficiente para realizar esta atualizacao";
+	protected final String msgSyslogChange = "Syslog modificado";
+	protected final String msgSyslognNoChange = "Syslog nao precisa de modificacao";
+	protected final String msgPing = "0 packets received";
 	private String serialNumber;
 	private String id;
 	private String idVlan201;
 	private String versaoAplicacao;
 	private int numeroScravos;
 	private int numeroSPVL90;
+	private int coletor;
+	private final int maxSites = 14;
+	private int sroutersUp[] = new int[maxSites];
+	private boolean srouters[] = new boolean[maxSites];
+	
 	//private String ipVLAN100;
 	private String status;
 	
@@ -106,10 +116,60 @@ public class Supervisor4Master implements Supervisor {
 		TableInfo.refresh(getSerialNumber(), 5, "");
 	}
 	
+	public void telnet0900(TelnetConnection conexao) {
+
+		String command = conexao.sendCommand("cat config/srouter_info.conf | grep -m 1 ne | awk '{print $3}'");
+		String ID =FilterCommand.filter(command); 
+		conexao.write("telnet 0 9000");
+		conexao.readUntil("SROUTER NE ID [#" + ID + "]>");
+		conexao.write("6");
+		String srouter = conexao.readUntil("SROUTER NE ID [#" + ID + "]>");
+		conexao.write("9");
+		conexao.readUntil('$' + " ");
+		setSrouters(srouter);
+	}
+	
+	public void setSrouters(String srouter) {
+		for (int i = 0; i < srouters.length ; i++) {
+			if (srouter.contains("169.254." + (128+i)+".1")) {
+				srouters[i] = true;
+			}
+		}
+	}
+	
+	public  boolean[] getSrouters(){
+		return srouters;
+	}
+	
+	public void setSroutersUp(TelnetConnection conexao, int coletor){
+		for(int i = 0 ; i < srouters.length ; i++){
+			if(srouters[i]){
+				boolean flag = conexao.sendCommand
+				("ping -c 1 169.254." + (128 + i) + ".1").contains(msgPing);
+				if(!flag){
+					sroutersUp[i]= coletor;
+				}
+			}
+		}
+	}
+	
+	public int[] getSroutersUp() {
+		return sroutersUp;
+	}
+	
+	public int getColetor() {
+		return coletor;
+	}
+
+	public void setColetor(int coletor) {
+		this.coletor = coletor;
+	}
 	@Override
-	public boolean atualizarAplicacao() {
+	public boolean update() {
 		// Implementar
 		return false;
 	}
 
+	
+	
 }
