@@ -24,7 +24,7 @@ public class StoreUpgradeToColetor {
 		if (Principal.lbTypeColetor.getText().contains("888")) {
 			
 			int coletores = Info.getnColetoresValidos();
-			coletores=configStore8886(coletores);
+			coletores=configStore(coletores);
 			
 			switch (coletores) {
 			case 1:
@@ -77,21 +77,25 @@ public class StoreUpgradeToColetor {
 	configSucess(coletores);
 	}
 	
-	public static int configStore8886(int coletor){
+	public static int configStore(int coletor){
 		
 		if (coletor == 1) {
 			int row = TableInfo.getRow(Info.getSnColetorOne());
+			System.out.println("ROW : " + row);
 			boolean flag = Principal.getTabela().getValueAt(row, 5).equals("ENVIAR[X]");
 			if (flag)
 				return 1;
 		} else if (coletor == 2) {
 			int row = TableInfo.getRow(Info.getSnColetorTwo());
+			System.out.println("ROW : " + row);
 			boolean flag = Principal.getTabela().getValueAt(row, 5).equals("ENVIAR[X]");
 			if (flag)
 				return 2;
 		} else if (coletor == 3) {
 			int rowOne = TableInfo.getRow(Info.getSnColetorOne());
+			System.out.println("ROW ONE : " + rowOne);
 			int rowTwo = TableInfo.getRow(Info.getSnColetorTwo());
+			System.out.println("ROW TWO : " + rowTwo);
 			boolean flagOne = Principal.getTabela().getValueAt(rowOne, 5).equals("ENVIAR[X]");
 			boolean flagTwo = Principal.getTabela().getValueAt(rowTwo, 5).equals("ENVIAR[X]");
 

@@ -8,7 +8,7 @@ public class Teste {
 		
 		Supervisor4Master t = new Supervisor4Master();
 		
-		TelnetConnection con = new TelnetConnection("172.30.0.236");
+		TelnetConnection con = new TelnetConnection("172.30.0.235");
 		con.connectVlan100();
 		
 		t.telnet0900(con);
@@ -23,7 +23,6 @@ public class Teste {
 		}
 		
 		con.closeSession();
-
 	}
 
 }

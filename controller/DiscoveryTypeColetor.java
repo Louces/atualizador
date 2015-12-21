@@ -1,7 +1,6 @@
 package controller;
 
 import view.Principal;
-
 import connection.TelnetConnection;
 import connection.ValidaIP;
 
@@ -42,11 +41,17 @@ public class DiscoveryTypeColetor {
 		if(server==1){
 			conexao = new TelnetConnection(Info.getColetorOne());
 			Info.setServerOne(conexao);
+			conexao.connectVlan100();
+			String SNONE = conexao.sendCommand("cat /proc/cmdline | awk '{print $1}'");
+			Info.setSnColetorOne((FilterCommand.filter(SNONE).replaceAll("sn=", "")));
 		}else{
 			conexao = new TelnetConnection(Info.getColetorTwo());
 			Info.setServerTwo(conexao);
+			conexao.connectVlan100();
+			String SNTWO = conexao.sendCommand("cat /proc/cmdline | awk '{print $1}'");
+			Info.setSnColetorTwo((FilterCommand.filter(SNTWO).replaceAll("sn=", "")));
 		}
-		conexao.connectVlan100();
+		
 		
 		Console.print("Descobrindo o tipo de coletor.");
 		String comando = conexao.sendCommand

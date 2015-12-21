@@ -13,6 +13,7 @@ public class Info {
 	private static TelnetConnection serverOne;
 	private static TelnetConnection serverTwo;
 	
+	
 	public static void setServerOne(TelnetConnection server){
 		serverOne=server;
 	}

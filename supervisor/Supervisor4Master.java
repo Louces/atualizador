@@ -12,6 +12,9 @@ public class Supervisor4Master implements Supervisor {
 	protected final String msgSyslogChange = "Syslog modificado";
 	protected final String msgSyslognNoChange = "Syslog nao precisa de modificacao";
 	protected final String msgPing = "0 packets received";
+	protected String status;
+	protected String nameScript;
+	protected boolean flag;
 	private String serialNumber;
 	private String id;
 	private String idVlan201;
@@ -19,13 +22,9 @@ public class Supervisor4Master implements Supervisor {
 	private int numeroScravos;
 	private int numeroSPVL90;
 	private int coletor;
-	private final int maxSites = 14;
+	private static final int maxSites = 14;
 	private int sroutersUp[] = new int[maxSites];
 	private boolean srouters[] = new boolean[maxSites];
-	
-	//private String ipVLAN100;
-	private String status;
-	
 	//private TelnetConnection conexao;
 	
 	public String getStatus() {
@@ -35,15 +34,7 @@ public class Supervisor4Master implements Supervisor {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-
-	/*public String getIpVLAN100() {
-		return ipVLAN100;
-	}
-
-	public void setIpVLAN100(String ipVLAN100) {
-		this.ipVLAN100 = ipVLAN100;
-	}*/
-
+	
 	public String getSerialNumber() {
 		return serialNumber;
 	}
@@ -120,6 +111,7 @@ public class Supervisor4Master implements Supervisor {
 
 		String command = conexao.sendCommand("cat config/srouter_info.conf | grep -m 1 ne | awk '{print $3}'");
 		String ID =FilterCommand.filter(command); 
+		srouters[Integer.parseInt(ID)-1]=true;
 		conexao.write("telnet 0 9000");
 		conexao.readUntil("SROUTER NE ID [#" + ID + "]>");
 		conexao.write("6");
@@ -170,6 +162,7 @@ public class Supervisor4Master implements Supervisor {
 		return false;
 	}
 
-	
-	
+	public static int getMaxsites() {
+		return maxSites;
+	}
 }

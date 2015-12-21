@@ -8,9 +8,7 @@ import controller.TableInfo;
 
 public class Supervisor4Legacy extends Supervisor4Master {
 	private TelnetConnection conexao;
-	private String status;
-	private String nameScript;
-	private boolean flag;
+	
 	
 	@Override
 	public boolean update() {
