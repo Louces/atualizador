@@ -21,10 +21,14 @@ public class StoreUpgradeToColetor {
 	
 	public static void store() {
 
-		if (Principal.lbTypeColetor.getText().contains("888")) {
+		if (Info.getTypeColetor().contains("888")) {
 			
 			int coletores = Info.getnColetoresValidos();
-			coletores=configStore(coletores);
+			
+			if(Info.getTypeColetor().equals("8886")){
+				coletores=configStore(coletores);	
+			}
+			
 			
 			switch (coletores) {
 			case 1:
@@ -42,7 +46,7 @@ public class StoreUpgradeToColetor {
 				return;
 			}
 		
-			if(TableInfo.contains("ENVIAR")){
+			if(TableInfo.contains("ENVIAR")&&Info.getTypeColetor().equals("8886")){
 				Principal.configBtn(3, true);
 			}else{
 				Principal.configBtn(3, false);
@@ -81,21 +85,17 @@ public class StoreUpgradeToColetor {
 		
 		if (coletor == 1) {
 			int row = TableInfo.getRow(Info.getSnColetorOne());
-			System.out.println("ROW : " + row);
 			boolean flag = Principal.getTabela().getValueAt(row, 5).equals("ENVIAR[X]");
 			if (flag)
 				return 1;
 		} else if (coletor == 2) {
 			int row = TableInfo.getRow(Info.getSnColetorTwo());
-			System.out.println("ROW : " + row);
 			boolean flag = Principal.getTabela().getValueAt(row, 5).equals("ENVIAR[X]");
 			if (flag)
 				return 2;
 		} else if (coletor == 3) {
 			int rowOne = TableInfo.getRow(Info.getSnColetorOne());
-			System.out.println("ROW ONE : " + rowOne);
 			int rowTwo = TableInfo.getRow(Info.getSnColetorTwo());
-			System.out.println("ROW TWO : " + rowTwo);
 			boolean flagOne = Principal.getTabela().getValueAt(rowOne, 5).equals("ENVIAR[X]");
 			boolean flagTwo = Principal.getTabela().getValueAt(rowTwo, 5).equals("ENVIAR[X]");
 
@@ -195,14 +195,28 @@ public class StoreUpgradeToColetor {
 	
 	public static void configBTN(){
 		if(isSucess()){
-			if(Info.getTypeColetor().equals("8886")&&!TableInfo.contains("ENVIAR")){
-				Principal.configBtn(2, false);
-				Principal.configBtn(3, false);
-				Principal.configBtn(5, true);
-			}else{
-				Principal.configBtn(2, false);
-				Principal.configBtn(3, true);
-				Principal.configBtn(5, true);
+			if(Info.getTypeColetor().equals("8886")){
+				if(!TableInfo.contains("ENVIAR")){
+					Principal.configBtn(2, false);
+					Principal.configBtn(3, false);
+					Principal.configBtn(5, true);	
+				}else{
+					Principal.configBtn(2, false);
+					Principal.configBtn(3, true);
+					Principal.configBtn(5, true);	
+				}
+				
+			}else if(Info.getTypeColetor().equals("8887")){
+				if(!TableInfo.contains("ENVIAR")){
+					Principal.configBtn(2, false);
+					Principal.configBtn(3, false);
+					Principal.configBtn(5, true);	
+				}else{
+					Principal.configBtn(2, false);
+					Principal.configBtn(3, false);
+					Principal.configBtn(4, true);
+					Principal.configBtn(5, true);	
+				}
 			}
 		}else{
 			

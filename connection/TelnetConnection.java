@@ -47,6 +47,15 @@ public class TelnetConnection {
 		write("root");
 		readUntil('$' + " ");
 	}
+	
+	public void connectVlan102(String IP){
+		write("telnet " + IP);
+		readUntil("login: ");
+		write("root");
+		readUntil("Password: ");
+		write("root");
+		readUntil('$' + " ");
+	}
 
 	public String telnet0900(String ID) {
 		write("telnet 0 9000");

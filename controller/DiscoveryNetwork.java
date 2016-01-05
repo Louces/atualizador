@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import supervisor.Supervisor4Legacy;
 import supervisor.Supervisor4Master;
+import supervisor.Supervisor4Slave;
 import view.Principal;
 import connection.TelnetConnection;
 
@@ -121,6 +122,25 @@ public class DiscoveryNetwork {
 		tableRow[5] = "ENVIAR[X]";
 		Console.print("Gravando dados na tabela.");
 		Principal.recordTable(tableRow);
+		
+		if(spvl.isContainsSlave()){
+		
+			Supervisor4Slave supervisor[] = spvl.getEscravo();
+			
+			for(int i = 0 ; i < supervisor.length ; i++){
+				if(supervisor[i]!=null){
+					tableRow[0] = supervisor[i].getId();
+					tableRow[1] = supervisor[i].getSerialNumber();
+					tableRow[2] = "Escravo " + (i+1);
+					tableRow[3] = supervisor[i].getVersaoAplicacao();
+					tableRow[4] = "Descoberto";
+					tableRow[5] = "ENVIAR[X]";
+					Principal.recordTable(tableRow);
+				}
+			}
+			
+		}
+		
 	}
 
 	public void discoveryVLAN101(int server){
@@ -230,6 +250,7 @@ public class DiscoveryNetwork {
 		("./supervisor -v | awk '{print $2}'");
 		spvlMaster.setVersaoAplicacao(FilterCommand.filter(comando).replaceFirst("V", ""));
 		spvlMaster.setStatus("Descoberto");
+		spvlMaster.discoverySlave(conexao);
 		Console.print("Adicionando dados...");
 		supervisores.add(spvlMaster);
 		gravaSupervisor8887(spvlMaster);

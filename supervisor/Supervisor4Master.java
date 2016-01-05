@@ -19,14 +19,25 @@ public class Supervisor4Master implements Supervisor {
 	private String id;
 	private String idVlan201;
 	private String versaoAplicacao;
-	private int numeroScravos;
+	//private int numeroScravos;
+	private boolean containsSlave;
 	private int numeroSPVL90;
+	private int[] slaves = new int[5];
+	private Supervisor4Slave[] escravo = new Supervisor4Slave[5];
 	private int coletor;
 	private static final int maxSites = 14;
 	private int sroutersUp[] = new int[maxSites];
 	private boolean srouters[] = new boolean[maxSites];
 	//private TelnetConnection conexao;
 	
+	public Supervisor4Slave[] getEscravo() {
+		return escravo;
+	}
+
+	public void setEscravo(Supervisor4Slave[] escravo) {
+		this.escravo = escravo;
+	}
+
 	public String getStatus() {
 		return status;
 	}
@@ -67,13 +78,13 @@ public class Supervisor4Master implements Supervisor {
 		this.versaoAplicacao = versaoAplicacao;
 	}
 
-	public int getNumeroScravos() {
+	/*public int getNumeroScravos() {
 		return numeroScravos;
 	}
 
 	public void setNumeroScravos(int numeroScravos) {
 		this.numeroScravos = numeroScravos;
-	}
+	}*/
 
 	public int getNumeroSPVL90() {
 		return numeroSPVL90;
@@ -164,5 +175,55 @@ public class Supervisor4Master implements Supervisor {
 
 	public static int getMaxsites() {
 		return maxSites;
+	}
+	
+	public void discoverySlave(TelnetConnection conexao){
+		Console.print("Descobrindo placas escravas...");
+		String comando =
+		conexao.sendCommand("cat config/srouter_spvls_ips.conf");
+		
+		for (int i = 1; i <= 5; i++) {
+
+			if(comando.contains("169.254."+(i)+".37")){
+			 	String ping = 
+			 	conexao.sendCommand("ping -c 1 " + "169.254."+(i)+".37");
+			 	if(ping.contains("1 packets received")){
+			 		slaves[i-1]=1;
+			 	}
+			}
+		}
+		
+		for(int i = 0 ; i < slaves.length; i++ ){
+			if(slaves[i]==1){
+				conexao.connectVlan102("169.254."+(i+1)+".37");
+				Supervisor4Slave supervisor = new Supervisor4Slave();
+				Console.print("Apagando arquivos remanescentes de "+"169.254."+(i+1)+".37");
+				conexao.sendCommand("rm *upgrade*");
+			    conexao.sendCommand("rm -rf *bkp*");
+			    Console.print("Obtendo dados.");
+			    supervisor.setId(getId());
+			    supervisor.setIdSlave(i+1);
+			    comando = conexao.sendCommand
+			    ("cat /proc/cmdline | awk '{print $1}'");
+			    supervisor.setSerialNumber(FilterCommand.filter(comando).replaceAll("sn=", ""));
+			    comando = conexao.sendCommand
+			    ("./supervisor -v | awk '{print $2}'");
+			    supervisor.setVersaoAplicacao(FilterCommand.filter(comando).replaceFirst("V", ""));
+			    conexao.disconnect();
+			    supervisor.setStatus("Descoberto");
+			    escravo[i]=supervisor;
+			    setContainsSlave(true);
+			}
+		}
+		
+		
+	}
+
+	public boolean isContainsSlave() {
+		return containsSlave;
+	}
+
+	public void setContainsSlave(boolean containsSlave) {
+		this.containsSlave = containsSlave;
 	}
 }

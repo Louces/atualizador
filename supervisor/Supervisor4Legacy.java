@@ -56,7 +56,7 @@ public class Supervisor4Legacy extends Supervisor4Master {
 						Console.print("Atualizando tabela");
 						refreshTable(conexao);
 						Console.print("Reiniciando a unidade");
-						conexao.sendCommand("nohup reboot");
+						conexao.sendCommand("reboot");
 						return true;
 					} else {
 						Console.print("Aguarde 4 segundos.");

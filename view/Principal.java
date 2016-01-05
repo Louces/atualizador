@@ -233,7 +233,7 @@ public class Principal extends JFrame {
 		panel.add(scrollPane);
 
 		table = new JTable();
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_NEXT_COLUMN);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -257,9 +257,9 @@ public class Principal extends JFrame {
 		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
 				"Site", "S/N", "M/E", "Versão Atual", "Status",
 				"Check" }));
-		table.getColumnModel().getColumn(0).setPreferredWidth(2);
+		table.getColumnModel().getColumn(0).setPreferredWidth(1);
 		table.getColumnModel().getColumn(1).setPreferredWidth(10);  
-		table.getColumnModel().getColumn(2).setPreferredWidth(20);  
+		table.getColumnModel().getColumn(2).setPreferredWidth(40);  
 		table.getColumnModel().getColumn(3).setPreferredWidth(55);  
 		table.getColumnModel().getColumn(4).setPreferredWidth(110);  
 		table.getColumnModel().getColumn(5).setPreferredWidth(60);  
