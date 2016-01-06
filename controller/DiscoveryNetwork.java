@@ -155,7 +155,7 @@ public class DiscoveryNetwork {
 			spvlMaster.setColetor(2);
 		}
 		
-		spvlMaster.telnet0900(conexao);
+		spvlMaster.telnet0900(conexao, server);
 		spvlMaster.setSroutersUp(conexao, server);
 		gravaVLAN101(spvlMaster);
 	}
@@ -203,6 +203,7 @@ public class DiscoveryNetwork {
 		int[] Vlan = spvl.getSroutersUp();
 		for (int i = 0; i < Vlan.length; i++) {
 			Vlan101[i] += Vlan[i];
+			SendFile.updateSPLV4Master[i] += Vlan[i];
 		}
 	}
 	
@@ -254,6 +255,7 @@ public class DiscoveryNetwork {
 		Console.print("Adicionando dados...");
 		supervisores.add(spvlMaster);
 		gravaSupervisor8887(spvlMaster);
+		SendFile.serialMaster[Integer.parseInt(spvlMaster.getId())-1]=spvlMaster.getSerialNumber();
 		conexao.disconnect();
 	}
 }

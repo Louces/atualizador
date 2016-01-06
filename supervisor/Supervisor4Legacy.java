@@ -1,6 +1,5 @@
 package supervisor;
 
-import view.Principal;
 import connection.TelnetConnection;
 import controller.Console;
 import controller.Info;
@@ -15,7 +14,7 @@ public class Supervisor4Legacy extends Supervisor4Master {
 		connect();
 		stopSupervisor(conexao);
 		Console.print("Iniciando atualização em : " + getSerialNumber());
-		nameScript = Principal.getFileUpgrade().getName();
+		nameScript = Info.getFileUpgrade().getName();
 		conexao.sendCommand("chmod +x " + nameScript);
 		conexao.sendCommand("touch update.log");
 		conexao.sendCommand("./" + nameScript + " >./update.log &");
@@ -49,7 +48,7 @@ public class Supervisor4Legacy extends Supervisor4Master {
 						Console.print("Atualizando tabela");
 						refreshTable(conexao);
 						Console.print("Reiniciando a unidade");
-						conexao.sendCommand("nohup reboot");
+						conexao.sendCommand("reboot");
 						return true;
 					} else if (status.contains(msgSyslognNoChange)) {
 						conexao.sendCommand("rm " + nameScript);

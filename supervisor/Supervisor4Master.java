@@ -3,6 +3,8 @@ package supervisor;
 import connection.TelnetConnection;
 import controller.Console;
 import controller.FilterCommand;
+import controller.Info;
+import controller.SendFile;
 import controller.TableInfo;
 
 public class Supervisor4Master implements Supervisor {
@@ -118,10 +120,10 @@ public class Supervisor4Master implements Supervisor {
 		TableInfo.refresh(getSerialNumber(), 5, "");
 	}
 	
-	public void telnet0900(TelnetConnection conexao) {
+	public void telnet0900(TelnetConnection conexao, int server) {
 
 		String command = conexao.sendCommand("cat config/srouter_info.conf | grep -m 1 ne | awk '{print $3}'");
-		String ID =FilterCommand.filter(command); 
+		String ID =FilterCommand.filter(command);
 		srouters[Integer.parseInt(ID)-1]=true;
 		conexao.write("telnet 0 9000");
 		conexao.readUntil("SROUTER NE ID [#" + ID + "]>");
@@ -130,6 +132,13 @@ public class Supervisor4Master implements Supervisor {
 		conexao.write("9");
 		conexao.readUntil('$' + " ");
 		setSrouters(srouter);
+		
+		if(server==1){
+			Info.setIDColetorOne(ID);
+		}else{
+			Info.setIDColetorTwo(ID);
+		}
+		
 	}
 	
 	public void setSrouters(String srouter) {
@@ -212,11 +221,10 @@ public class Supervisor4Master implements Supervisor {
 			    conexao.disconnect();
 			    supervisor.setStatus("Descoberto");
 			    escravo[i]=supervisor;
+			    SendFile.updateSPVL4Slave[Integer.parseInt(supervisor.getId())-1][i]=1;
 			    setContainsSlave(true);
 			}
 		}
-		
-		
 	}
 
 	public boolean isContainsSlave() {

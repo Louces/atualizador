@@ -29,6 +29,8 @@ import controller.Console;
 import controller.DiscoveryNetwork;
 import controller.FileChooser;
 import controller.GenerateMD5;
+import controller.Info;
+import controller.SendFile;
 import controller.StoreUpgradeToColetor;
 import controller.UpdateSupervisor;
 
@@ -49,7 +51,6 @@ public class Principal extends JFrame {
 	private static Button btnCarregarScript;
 	private static Button btnAtualizar;
 	private static JProgressBar progressBar;
-	private static File fileUpgrade;
 	private static String md5;
 	
 	long inicio,fim;
@@ -69,15 +70,7 @@ public class Principal extends JFrame {
 	public static void setTabela(DefaultTableModel tabela) {
 		Principal.tabela = tabela;
 	}
-
-	public static File getFileUpgrade() {
-		return fileUpgrade;
-	}
-
-	public static void setFileUpgrade(File fileUpgrade) {
-		Principal.fileUpgrade = fileUpgrade;
-	}
-
+	
 	public static String getMd5() {
 		return md5;
 	}
@@ -277,6 +270,22 @@ public class Principal extends JFrame {
 		});
 		btnEviarScript.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/*for(int i = 0 ; i < 14 ; i++){
+					System.out.print(SendFile.updateSPLV4Master[i]+" ");
+				}
+				System.out.println();
+				for(int i=0 ; i< 5 ; i++){
+					for(int j = 0 ; j < 5 ; j++){
+						System.out.print(SendFile.updateSPVL4Slave[i][j]);
+					}
+					System.out.println();
+				}*/
+				 new Thread(new Runnable() {
+			            @Override
+			            public void run() {
+			            btnEnviar();
+			            }
+			        }).start();
 			}
 		});
 		btnDescobrir.addActionListener(new ActionListener() {
@@ -316,6 +325,12 @@ public class Principal extends JFrame {
 		}else{
 		
 		}
+	}
+	
+	public void btnEnviar(){
+		getTextAreaConsole().setText("");
+		
+		SendFile.sendMaster();
 	}
 
 	public void monitoringIP() {
@@ -419,11 +434,11 @@ public class Principal extends JFrame {
 		File arquivo = fileChooser.getSelectedFile();
 
 		if (!(arquivo == null) && arquivo.exists() && arquivo.getName().contains(".run")) {
-			setFileUpgrade(arquivo);
+			Info.setFileUpgrade(arquivo);
 			configBtn(3, true);
 
 			try {
-				setMd5(GenerateMD5.getMD5Checksum(getFileUpgrade().getAbsolutePath()));
+				setMd5(GenerateMD5.getMD5Checksum(Info.getFileUpgrade().getAbsolutePath()));
 			} catch (Exception e) {
 				e.printStackTrace();
 				Console.print("O arquivo selecionado não é valido!");

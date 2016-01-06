@@ -11,6 +11,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.io.CopyStreamAdapter;
 
 import controller.Console;
+import controller.Info;
 import view.Principal;
 
 public class FtpPutColetor {
@@ -18,7 +19,7 @@ public class FtpPutColetor {
 	private String user = "root";
 	private String password = "root";
 	private JProgressBar progressBar = Principal.getProgressBar();
-	private File file = Principal.getFileUpgrade();
+	private File file = Info.getFileUpgrade();
 
 	public FtpPutColetor(String server) {
 		

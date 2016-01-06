@@ -116,18 +116,26 @@ public class StoreUpgradeToColetor {
 		if (coletores == 1) {
 			if (sucessColetorOne){
 				setSucess(true);
+				int id =Integer.parseInt(Principal.getTabela().getValueAt(TableInfo.getRow(Info.getSnColetorOne()), 0)+"");
+				SendFile.updateSPLV4Master[id-1]=-1;
 			}else{
 				setSucess(false);
 			}
 		} else if (coletores == 2) {
 			if (sucessColetorTwo){
 				setSucess(true);
+				int id =Integer.parseInt(Principal.getTabela().getValueAt(TableInfo.getRow(Info.getSnColetorTwo()), 0)+"");
+				SendFile.updateSPLV4Master[id-1]=-1;
 			}else{
 				setSucess(false);
 			}
 		} else if (coletores == 3) {
 			if (sucessColetorOne && sucessColetorTwo){
 				setSucess(true);
+				int id =Integer.parseInt(Principal.getTabela().getValueAt(TableInfo.getRow(Info.getSnColetorOne()), 0)+"");
+				SendFile.updateSPLV4Master[id-1]=-1;
+				id =Integer.parseInt(Principal.getTabela().getValueAt(TableInfo.getRow(Info.getSnColetorTwo()), 0)+"");
+				SendFile.updateSPLV4Master[id-1]=-1;
 			}else{
 				setSucess(false);
 			}
@@ -170,7 +178,7 @@ public class StoreUpgradeToColetor {
 		}
 			
 		Console.print("Obtendo MD5 do arquivo transferido...");
-		md5 = telnet.sendCommand("md5sum "+ Principal.getFileUpgrade().getName() + "| awk '{print $1}'");
+		md5 = telnet.sendCommand("md5sum "+ Info.getFileUpgrade().getName() + "| awk '{print $1}'");
 	}
 	
 	public static void refreshTable(int coletores) {

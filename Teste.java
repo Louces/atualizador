@@ -11,7 +11,7 @@ public class Teste {
 		TelnetConnection con = new TelnetConnection("172.30.0.235");
 		con.connectVlan100();
 		
-		t.telnet0900(con);
+		//t.telnet0900(con);
 		
 		t.setSroutersUp(con, 1);
 		

@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.File;
+
 import connection.TelnetConnection;
 import view.Principal;
 
@@ -12,7 +14,17 @@ public class Info {
 	private static int nColetoresValidos;
 	private static TelnetConnection serverOne;
 	private static TelnetConnection serverTwo;
+	private static File fileUpgrade;
+	private static String IDColetorOne;
+	private static String IDColetorTwo;
 	
+	public static File getFileUpgrade() {
+		return fileUpgrade;
+	}
+
+	public static void setFileUpgrade(File fileUpgrade) {
+		Info.fileUpgrade = fileUpgrade;
+	}	
 	
 	public static void setServerOne(TelnetConnection server){
 		serverOne=server;
@@ -78,6 +90,22 @@ public class Info {
 
 	public static void setTypeColetor(String typeColetor) {
 		Info.typeColetor = typeColetor;
+	}
+
+	public static String getIDColetorOne() {
+		return IDColetorOne;
+	}
+
+	public static void setIDColetorOne(String iDColetorOne) {
+		IDColetorOne = iDColetorOne;
+	}
+
+	public static String getIDColetorTwo() {
+		return IDColetorTwo;
+	}
+
+	public static void setIDColetorTwo(String iDColetorTwo) {
+		IDColetorTwo = iDColetorTwo;
 	}
 
 }
