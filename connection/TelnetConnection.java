@@ -70,7 +70,7 @@ public class TelnetConnection {
 	public String sendCommand(String command) {
 		try {
 			write(command);
-			return readUntil(prompt + " ").trim();
+			return readUntil(prompt + " ");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -125,7 +125,7 @@ public class TelnetConnection {
 						}
 					}
 				}
-
+				
 				if (ch == lastChar)
 					if (sb.toString().endsWith(pattern)){
 						return sb.toString();

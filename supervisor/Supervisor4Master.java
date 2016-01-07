@@ -222,6 +222,7 @@ public class Supervisor4Master implements Supervisor {
 			    supervisor.setStatus("Descoberto");
 			    escravo[i]=supervisor;
 			    SendFile.updateSPVL4Slave[Integer.parseInt(supervisor.getId())-1][i]=1;
+			    SendFile.serialSlave[Integer.parseInt(supervisor.getId())-1][i]=supervisor.getSerialNumber();
 			    setContainsSlave(true);
 			}
 		}

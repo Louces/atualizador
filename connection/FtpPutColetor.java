@@ -22,7 +22,8 @@ public class FtpPutColetor {
 	private File file = Info.getFileUpgrade();
 
 	public FtpPutColetor(String server) {
-		
+		progressBar.setValue(0);
+		progressBar.setString(0 + "%");
 		progressBar.setVisible(true);
 		try {
 			final FTPClient ftp = new FTPClient();

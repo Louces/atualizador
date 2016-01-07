@@ -157,7 +157,7 @@ public class Principal extends JFrame {
 		txfColetorUm = new TextField();
 		txfColetorUm.setBounds(194, 10, 105, 22);
 		contentPane.add(txfColetorUm);
-		txfColetorUm.setText("172.30.0.235");
+		txfColetorUm.setText("172.30.0.236");
 
 		btnDescobrir = new Button("Descobrir");
 		btnDescobrir.setBounds(10, 10, 105, 23);

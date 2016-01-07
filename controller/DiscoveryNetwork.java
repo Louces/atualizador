@@ -134,7 +134,7 @@ public class DiscoveryNetwork {
 					tableRow[2] = "Escravo " + (i+1);
 					tableRow[3] = supervisor[i].getVersaoAplicacao();
 					tableRow[4] = "Descoberto";
-					tableRow[5] = "ENVIAR[X]";
+					tableRow[5] = "-";
 					Principal.recordTable(tableRow);
 				}
 			}
