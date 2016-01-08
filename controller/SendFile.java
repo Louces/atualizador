@@ -24,13 +24,11 @@ public class SendFile {
 				ftpget(1, (i+1));
 				break;
 			case 2:
-				
+				ftpget(2, (i+1));
 				break;
-				
 			case 3:
-				
+				ftpget(1, (i+1));
 				break;
-
 			default:
 				break;
 			}

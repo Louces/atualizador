@@ -118,6 +118,7 @@ public class StoreUpgradeToColetor {
 				setSucess(true);
 				int id =Integer.parseInt(Principal.getTabela().getValueAt(TableInfo.getRow(Info.getSnColetorOne()), 0)+"");
 				SendFile.updateSPLV4Master[id-1]=-1;
+				slave(1);
 			}else{
 				setSucess(false);
 			}
@@ -126,6 +127,7 @@ public class StoreUpgradeToColetor {
 				setSucess(true);
 				int id =Integer.parseInt(Principal.getTabela().getValueAt(TableInfo.getRow(Info.getSnColetorTwo()), 0)+"");
 				SendFile.updateSPLV4Master[id-1]=-1;
+				slave(2);
 			}else{
 				setSucess(false);
 			}
@@ -134,8 +136,10 @@ public class StoreUpgradeToColetor {
 				setSucess(true);
 				int id =Integer.parseInt(Principal.getTabela().getValueAt(TableInfo.getRow(Info.getSnColetorOne()), 0)+"");
 				SendFile.updateSPLV4Master[id-1]=-1;
+				slave(1);
 				id =Integer.parseInt(Principal.getTabela().getValueAt(TableInfo.getRow(Info.getSnColetorTwo()), 0)+"");
 				SendFile.updateSPLV4Master[id-1]=-1;
+				slave(2);
 			}else{
 				setSucess(false);
 			}
@@ -228,6 +232,25 @@ public class StoreUpgradeToColetor {
 			}
 		}else{
 			
+		}
+	}
+	
+	public static void slave(int coletor){
+		String id;
+		TelnetConnection conexao;
+		
+		if(coletor==1){
+			id = Info.getIDColetorOne();
+			conexao = Info.getServerOne();
+		}else{
+			id = Info.getIDColetorTwo();
+			conexao = Info.getServerTwo();
+		}
+		
+		for (int j = 0; j < 5; j++) {
+			if (SendFile.updateSPVL4Slave[Integer.parseInt(id)-1][j] == 1) {
+				SendFile.ftpgetSlave(conexao, Integer.parseInt(id)-1, j);
+			}
 		}
 	}
 	
