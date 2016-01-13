@@ -48,7 +48,7 @@ public class SendFile {
 		return;	
 		}
 		
-		TableInfo.refresh(serialMaster[ID-1], 4,"Upload...");
+		TableInfo.refresh(serialMaster[ID-1], 4,"Download...");
 		
 		TelnetConnection conexao;
 		
@@ -110,7 +110,7 @@ public class SendFile {
 	}
 	
 	public static void ftpgetSlave(TelnetConnection conexao,int i,int j){
-		TableInfo.refresh(serialSlave[i][j], 4,"Upload...");
+		TableInfo.refresh(serialSlave[i][j], 4,"Download...");
 		name = Info.getFileUpgrade().getName();
 		long tamanho = Info.getFileUpgrade().length();
 		progressBar.setValue(0);

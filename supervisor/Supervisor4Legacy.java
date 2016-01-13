@@ -46,14 +46,14 @@ public class Supervisor4Legacy extends Supervisor4Master {
 						conexao.sendCommand("killall klogd");
 						conexao.sendCommand("rm " + nameScript);
 						Console.print("Atualizando tabela");
-						refreshTable(conexao);
+						refreshTable(conexao,8886);
 						Console.print("Reiniciando a unidade");
 						conexao.sendCommand("reboot");
 						return true;
 					} else if (status.contains(msgSyslognNoChange)) {
 						conexao.sendCommand("rm " + nameScript);
 						Console.print("Atualizando tabela");
-						refreshTable(conexao);
+						refreshTable(conexao,8886);
 						Console.print("Reiniciando a unidade");
 						conexao.sendCommand("reboot");
 						return true;
@@ -76,8 +76,4 @@ public class Supervisor4Legacy extends Supervisor4Master {
 			conexao = Info.getServerTwo();
 		}
 	}
-
-	
-	
-
 }

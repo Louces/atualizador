@@ -21,7 +21,6 @@ public class Supervisor4Master implements Supervisor {
 	private String id;
 	private String idVlan201;
 	private String versaoAplicacao;
-	//private int numeroScravos;
 	private boolean containsSlave;
 	private int numeroSPVL90;
 	private int[] slaves = new int[5];
@@ -30,7 +29,8 @@ public class Supervisor4Master implements Supervisor {
 	private static final int maxSites = 14;
 	private int sroutersUp[] = new int[maxSites];
 	private boolean srouters[] = new boolean[maxSites];
-	//private TelnetConnection conexao;
+	private TelnetConnection conexaoColetor;
+	private boolean isUpdate;
 	
 	public Supervisor4Slave[] getEscravo() {
 		return escravo;
@@ -80,14 +80,6 @@ public class Supervisor4Master implements Supervisor {
 		this.versaoAplicacao = versaoAplicacao;
 	}
 
-	/*public int getNumeroScravos() {
-		return numeroScravos;
-	}
-
-	public void setNumeroScravos(int numeroScravos) {
-		this.numeroScravos = numeroScravos;
-	}*/
-
 	public int getNumeroSPVL90() {
 		return numeroSPVL90;
 	}
@@ -111,13 +103,16 @@ public class Supervisor4Master implements Supervisor {
 	    conexao.sendCommand("rm -rf *bkp*");
 	}
 	
-	public void refreshTable(TelnetConnection conexao) {
+	public void refreshTable(TelnetConnection conexao, int tipo) {
 		String NEWversion = 
 		FilterCommand.filter(conexao.sendCommand(
 		"./supervisor -v | awk '{print $2}'").replace("V", ""));
 		TableInfo.refresh(getSerialNumber(), 3, NEWversion);
-		TableInfo.refresh(getSerialNumber(), 4, "Unidade reinicializada");
-		TableInfo.refresh(getSerialNumber(), 5, "");
+		if(tipo==8886){
+			TableInfo.refresh(getSerialNumber(), 4, "Unidade reinicializada");
+			TableInfo.refresh(getSerialNumber(), 5, "");	
+		}
+		
 	}
 	
 	public void telnet0900(TelnetConnection conexao, int server) {
@@ -176,10 +171,68 @@ public class Supervisor4Master implements Supervisor {
 	public void setColetor(int coletor) {
 		this.coletor = coletor;
 	}
+	
 	@Override
 	public boolean update() {
-		// Implementar
-		return false;
+		
+		TelnetConnection conexao = getConexaoColetor();
+		conexao.connectVlan101("169.254."+(Integer.parseInt(getId())+127)+".1");
+		
+		stopSupervisor(conexao);
+		Console.print("Iniciando atualização em : " + getSerialNumber());
+		nameScript = Info.getFileUpgrade().getName();
+		conexao.sendCommand("chmod +x " + nameScript);
+		conexao.sendCommand("touch update.log");
+		conexao.sendCommand("./" + nameScript + " >./update.log &");
+		TableInfo.refresh(getSerialNumber(), 4, "Em atualização");
+		Console.print("Aguarde 60 segundos.");
+		sleep(conexao, 60);
+		
+		while (true) {
+			status = conexao.sendCommand("cat update.log");
+			flag = status.contains(msgEndUpgrade);
+
+			if (flag) {
+				Console.print("Fim da atualização...");
+				if (status.contains(msnNoSpace)) {
+					Console.print("Atualização falhou devido a falta de espaço.");
+					TableInfo.refresh(getSerialNumber(), 4, "Falta de espaço.");
+					conexao.disconnect();
+					return false;
+				}
+			Console.print("Aguarde 4 segundos.");	
+			sleep(conexao, 4);
+
+				while (true) {
+					status = conexao.sendCommand("cat update.log");
+					flag = status.contains(msgSyslogChange);
+					if (flag) {
+						Console.print("Aguarde 4 segundos.");
+						sleep(conexao, 4);
+						conexao.sendCommand("killall klogd");
+						setUpdate(true);
+						Console.print("Atualizando tabela");
+						refreshTable(conexao,8887);
+						rebootNotColetor(conexao);
+						conexao.disconnect();
+						return true;
+					} else if (status.contains(msgSyslognNoChange)) {
+						Console.print("Atualizando tabela");
+						refreshTable(conexao,8887);
+						setUpdate(true);
+						rebootNotColetor(conexao);
+						conexao.disconnect();
+						return true;
+					} else {
+						Console.print("Aguarde 4 segundos.");
+						sleep(conexao, 4);
+					}
+				}
+			} else {
+				Console.print("Aguarde 10 segundos.");
+				sleep(conexao, 10);
+			}
+		}
 	}
 
 	public static int getMaxsites() {
@@ -234,5 +287,37 @@ public class Supervisor4Master implements Supervisor {
 
 	public void setContainsSlave(boolean containsSlave) {
 		this.containsSlave = containsSlave;
+	}
+
+	public TelnetConnection getConexaoColetor() {
+		return conexaoColetor;
+	}
+
+	public void setConexaoColetor(TelnetConnection conexaoColetor) {
+		this.conexaoColetor = conexaoColetor;
+	}
+	
+	public void rebootNotColetor(TelnetConnection conexao){
+		boolean flagOne =  getSerialNumber().equals(Info.getSnColetorOne());
+		boolean flagTwo =  getSerialNumber().equals(Info.getSnColetorTwo());
+		
+		if(!(flagOne||flagTwo)){
+			Console.print("Reiniciando a unidade");
+			conexao.sendCommand("reboot");
+			TableInfo.refresh(getSerialNumber(), 4, "Unidade reinicializada.");
+			TableInfo.refresh(getSerialNumber(), 5, "-");
+		}else{
+			TableInfo.refresh(getSerialNumber(), 4, "Aguardando Reboot.");
+			TableInfo.refresh(getSerialNumber(), 5, "-");
+		}
+		
+	}
+
+	public boolean isUpdate() {
+		return isUpdate;
+	}
+
+	public void setUpdate(boolean isUpdate) {
+		this.isUpdate = isUpdate;
 	}
 }

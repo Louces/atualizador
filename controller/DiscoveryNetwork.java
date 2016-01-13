@@ -183,15 +183,15 @@ public class DiscoveryNetwork {
 			switch (Vlan101[i]) {
 			case 1:
 				conexao = Info.getServerOne();
-				getInfoMaster(Vlan, conexao, i);
+				getInfoMaster(Vlan, conexao);
 				break;
 			case 2:
 				conexao = Info.getServerTwo();
-				getInfoMaster(Vlan, conexao, i);
+				getInfoMaster(Vlan, conexao);
 				break;
 			case 3:
 				conexao = Info.getServerOne();
-				getInfoMaster(Vlan, conexao, i);
+				getInfoMaster(Vlan, conexao);
 				break;
 			default:
 				break;
@@ -203,7 +203,7 @@ public class DiscoveryNetwork {
 		int[] Vlan = spvl.getSroutersUp();
 		for (int i = 0; i < Vlan.length; i++) {
 			Vlan101[i] += Vlan[i];
-			SendFile.updateSPLV4Master[i] += Vlan[i];
+			SendFile.updateSPLV4Master[i] += Vlan[i]; //cada supervisor tem q saber por quem é visto! 
 		}
 	}
 	
@@ -233,8 +233,9 @@ public class DiscoveryNetwork {
 		supervisores.add(spvlLegacy);
 	}
 	
-	public void getInfoMaster(String conexaoVLAN101 , TelnetConnection conexao, int ID){
+	public void getInfoMaster(String conexaoVLAN101 , TelnetConnection conexao){
 		spvlMaster = new Supervisor4Master();
+		spvlMaster.setConexaoColetor(conexao);
 		conexao.connectVlan101(conexaoVLAN101);	
 		String comando;
 		Console.print("Apagando arquivos remanescentes...");
@@ -258,4 +259,6 @@ public class DiscoveryNetwork {
 		SendFile.serialMaster[Integer.parseInt(spvlMaster.getId())-1]=spvlMaster.getSerialNumber();
 		conexao.disconnect();	
 	}
+
+	
 }

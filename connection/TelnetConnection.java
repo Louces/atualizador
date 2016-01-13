@@ -138,5 +138,10 @@ public class TelnetConnection {
 		}
 		return null;
 	}
+	
+	@Override
+	public String toString(){
+		return getServer();
+	}
 
 }
