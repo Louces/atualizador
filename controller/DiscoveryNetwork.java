@@ -26,6 +26,11 @@ public class DiscoveryNetwork {
 	
 	public void network(){
 		config();
+		
+		if(Principal.lbTypeColetor.getText().contains("Nenhum coletor válido")){
+			return;
+		}
+		
 		Console.print("Descobrido rede...");
 		
 		if(Info.getTypeColetor().contains("8886")){
@@ -114,7 +119,7 @@ public class DiscoveryNetwork {
 	
 	public void gravaSupervisor8887(Supervisor4Master spvl) {
 		spvl = (Supervisor4Master) supervisores.get(supervisores.size() - 1);
-		tableRow[0] = spvl.getId();
+		tableRow[0] = spvl.getId() + " - " + spvl.getNameNE();
 		tableRow[1] = spvl.getSerialNumber();
 		tableRow[2] = "Mestre";
 		tableRow[3] = spvl.getVersaoAplicacao();
@@ -248,6 +253,8 @@ public class DiscoveryNetwork {
 		comando = conexao.sendCommand
 		("cat /proc/cmdline | awk '{print $1}'");
 		spvlMaster.setSerialNumber(FilterCommand.filter(comando).replaceAll("sn=", ""));
+		comando = conexao.sendCommand("cat config/srouter_info.conf | grep ne_name | awk -F = '{print $2}'");
+		spvlMaster.setNameNE(FilterCommand.filter(comando));
 		comando = conexao.sendCommand
 		("./supervisor -v | awk '{print $2}'");
 		spvlMaster.setVersaoAplicacao(FilterCommand.filter(comando).replaceFirst("V", ""));

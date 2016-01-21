@@ -16,7 +16,9 @@ public class SendFile {
 	
 	
 	public static void sendMaster(){
-
+		Principal.configBtn(4, false);
+		Principal.configBtn(5, false);
+		
 		for(int i = 0 ; i < updateSPLV4Master.length; i++){
 		
 			switch (updateSPLV4Master[i]) {
@@ -33,7 +35,7 @@ public class SendFile {
 				break;
 			}
 		}
-		
+		configBTN();
 	}
 	
 	public static void ftpget(int coletor , int ID){
@@ -152,6 +154,22 @@ public class SendFile {
 			}
 		}
 		conexao.disconnect();
+	}
+	
+	public static void configBTN(){
+		
+		if(TableInfo.contains("ENVIAR")) {
+			Principal.configBtn(4, true);
+		}else{
+			Principal.configBtn(4, false);
+		}
+		
+		if(TableInfo.contains("ATUALIZAR")) {
+			Principal.configBtn(5, true);
+		}else{
+			Principal.configBtn(5, false);
+		}
+		
 	}
 	
 }

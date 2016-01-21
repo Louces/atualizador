@@ -34,4 +34,23 @@ public class TableInfo {
 		}
 		return false;
 	}
+	
+	public static boolean endUpdate(){
+		int rows = Principal.getTabela().getRowCount();
+		int flag=0;
+		
+		for (int i = 0; i < rows; i++) {
+			String aux = Principal.getTabela().getValueAt(i, 5) + "";
+			if (aux.contains("-")) {
+				flag++;
+			}
+		}
+		
+		if(flag==rows){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
 }

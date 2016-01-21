@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import connection.TelnetConnection;
 import supervisor.Supervisor4Legacy;
 import supervisor.Supervisor4Master;
+import supervisor.Supervisor4Slave;
 import view.Principal;
 
 public class UpdateSupervisor {
@@ -38,7 +39,7 @@ public class UpdateSupervisor {
 				}
 
 			}
-			configBTN();
+			configBTN(8886);
 		}else if(typeColetor.contains("8887")){
 			ArrayList<Supervisor4Master> spvlMaster = new ArrayList<Supervisor4Master>();
 			
@@ -47,15 +48,26 @@ public class UpdateSupervisor {
 			}
 			
 			for(Supervisor4Master spvl : spvlMaster){
+				
+				if (spvl.isContainsSlave()) {
+					Supervisor4Slave[] slave = spvl.getEscravo();
+
+					for (int i = 0; i < 5; i++) {
+						if (slave[i] != null) {
+							slave[i].update();
+						}
+					}
+				}
+				
 				String SN  = spvl.getSerialNumber();
 				int row = TableInfo.getRow(SN);
 				boolean flag = Principal.getTabela().getValueAt(row, 5).equals("ATUALIZAR[X]");
 				
 				if(row!=-1 && flag){
+					Principal.configBtn(4, false);
+					Principal.configBtn(5, false);
 					spvl.update();
 				}
-				Principal.configBtn(5, true);
-				
 			}
 			
 			int nUpdade = 0;
@@ -67,10 +79,7 @@ public class UpdateSupervisor {
 				}
 			}
 			
-			Console.print("Nupdade : " + nUpdade);
-			Console.print("spvlMaster.size() : " + spvlMaster.size());
-			
-			if(nUpdade==spvlMaster.size()){
+			if(nUpdade==spvlMaster.size()&&TableInfo.endUpdate()){
 				
 				if(Info.getServerOne()!=null){
 					TelnetConnection conexao = Info.getServerOne();
@@ -84,17 +93,27 @@ public class UpdateSupervisor {
 					TableInfo.refresh(Info.getSnColetorTwo(), 4, "Unidade reinicializada.");
 				}
 			}
+			configBTN(8887);	
 		}
 	}
 
 	public void config() {
 		Principal.configBtn(3, false);
+		Principal.configBtn(4, false);
 		Principal.configBtn(5, false);
 		typeColetor = Info.getTypeColetor();
 		SPVL = DiscoveryNetwork.getSupervisores();
 	}
 	
-	public void configBTN(){
+	public void configBTN(int tipo){
+		int btn;
+		
+		if (tipo == 8886) {
+			btn = 3;
+		} else {
+			btn = 4;
+		}
+		
 		if(TableInfo.contains("ATUALIZAR")||TableInfo.contains("ENVIAR")) {
 			
 			if(TableInfo.contains("ATUALIZAR")){
@@ -104,9 +123,9 @@ public class UpdateSupervisor {
 			}
 			
 			if(TableInfo.contains("ENVIAR")){
-				Principal.configBtn(3, true);	
+				Principal.configBtn(btn, true);	
 			}else{
-				Principal.configBtn(3, false);
+				Principal.configBtn(btn, false);
 			}
 			
 		}else{

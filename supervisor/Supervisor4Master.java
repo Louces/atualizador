@@ -16,6 +16,7 @@ public class Supervisor4Master implements Supervisor {
 	protected final String msgPing = "0 packets received";
 	protected String status;
 	protected String nameScript;
+	private String nameNE;
 	protected boolean flag;
 	private String serialNumber;
 	private String id;
@@ -31,6 +32,7 @@ public class Supervisor4Master implements Supervisor {
 	private boolean srouters[] = new boolean[maxSites];
 	private TelnetConnection conexaoColetor;
 	private boolean isUpdate;
+	
 	
 	public Supervisor4Slave[] getEscravo() {
 		return escravo;
@@ -264,6 +266,7 @@ public class Supervisor4Master implements Supervisor {
 			    conexao.sendCommand("rm -rf *bkp*");
 			    Console.print("Obtendo dados.");
 			    supervisor.setId(getId());
+			    supervisor.setIdMaster(Integer.parseInt(getId()));
 			    supervisor.setIdSlave(i+1);
 			    comando = conexao.sendCommand
 			    ("cat /proc/cmdline | awk '{print $1}'");
@@ -271,6 +274,7 @@ public class Supervisor4Master implements Supervisor {
 			    comando = conexao.sendCommand
 			    ("./supervisor -v | awk '{print $2}'");
 			    supervisor.setVersaoAplicacao(FilterCommand.filter(comando).replaceFirst("V", ""));
+			    supervisor.setConexaoColetorSlave(conexao);
 			    conexao.disconnect();
 			    supervisor.setStatus("Descoberto");
 			    escravo[i]=supervisor;
@@ -319,5 +323,13 @@ public class Supervisor4Master implements Supervisor {
 
 	public void setUpdate(boolean isUpdate) {
 		this.isUpdate = isUpdate;
+	}
+
+	public String getNameNE() {
+		return nameNE;
+	}
+
+	public void setNameNE(String nameNE) {
+		this.nameNE = nameNE;
 	}
 }

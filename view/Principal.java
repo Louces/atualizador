@@ -136,7 +136,7 @@ public class Principal extends JFrame {
 		setResizable(false);
 		setTitle("Padtec S/A - V1.7.0");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 494, 578);
+		setBounds(100, 100, 527, 578);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
@@ -209,13 +209,13 @@ public class Principal extends JFrame {
 		contentPane.add(lbTypeColetor);
 
 		textAreaConsole = new TextArea();
-		textAreaConsole.setBounds(10, 373, 470, 165);
+		textAreaConsole.setBounds(10, 373, 501, 165);
 		contentPane.add(textAreaConsole);
 
 		Panel panel = new Panel();
 		panel.setFocusTraversalKeysEnabled(false);
 		panel.setFocusable(false);
-		panel.setBounds(10, 155, 470, 212);
+		panel.setBounds(10, 155, 501, 212);
 		contentPane.add(panel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		
@@ -248,12 +248,12 @@ public class Principal extends JFrame {
 		});
 		scrollPane.setViewportView(table);
 		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
-				"Site", "S/N", "M/E", "Versão Atual", "Status",
+				"Site", "S/N", "M/E", "Versão", "Status",
 				"Check" }));
-		table.getColumnModel().getColumn(0).setPreferredWidth(1);
+		table.getColumnModel().getColumn(0).setPreferredWidth(50);
 		table.getColumnModel().getColumn(1).setPreferredWidth(10);  
 		table.getColumnModel().getColumn(2).setPreferredWidth(40);  
-		table.getColumnModel().getColumn(3).setPreferredWidth(55);  
+		table.getColumnModel().getColumn(3).setPreferredWidth(50);  
 		table.getColumnModel().getColumn(4).setPreferredWidth(110);  
 		table.getColumnModel().getColumn(5).setPreferredWidth(60);  
 		tabela = (DefaultTableModel) table.getModel();
@@ -270,16 +270,7 @@ public class Principal extends JFrame {
 		});
 		btnEviarScript.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*for(int i = 0 ; i < 14 ; i++){
-					System.out.print(SendFile.updateSPLV4Master[i]+" ");
-				}
-				System.out.println();
-				for(int i=0 ; i< 5 ; i++){
-					for(int j = 0 ; j < 5 ; j++){
-						System.out.print(SendFile.updateSPVL4Slave[i][j]);
-					}
-					System.out.println();
-				}*/
+
 				 new Thread(new Runnable() {
 			            @Override
 			            public void run() {
