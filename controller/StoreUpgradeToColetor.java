@@ -116,36 +116,51 @@ public class StoreUpgradeToColetor {
 		if (coletores == 1) {
 			if (sucessColetorOne){
 				setSucess(true);
-				int id = Integer.parseInt(Info.getIDColetorOne());
-				SendFile.updateSPLV4Master[id-1]=-1;
-				slave(1);
+				
+				if(!Info.getTypeColetor().equals("8886")){
+					int id = Integer.parseInt(Info.getIDColetorOne());
+					SendFile.updateSPLV4Master[id-1]=-1;
+					slave(1);	
+				}
+				
 			}else{
 				setSucess(false);
 			}
 		} else if (coletores == 2) {
 			if (sucessColetorTwo){
 				setSucess(true);
-				int id = Integer.parseInt(Info.getIDColetorTwo());
-				SendFile.updateSPLV4Master[id-1]=-1;
-				slave(2);
+				
+				if(!Info.getTypeColetor().equals("8886")){
+					
+					int id = Integer.parseInt(Info.getIDColetorTwo());
+					SendFile.updateSPLV4Master[id-1]=-1;
+					slave(2);	
+				}
+				
+				
 			}else{
 				setSucess(false);
 			}
 		} else if (coletores == 3) {
 			if (sucessColetorOne && sucessColetorTwo){
 				setSucess(true);
-				int id = Integer.parseInt(Info.getIDColetorOne());
-				SendFile.updateSPLV4Master[id-1]=-1;
-				slave(1);
-				id = Integer.parseInt(Info.getIDColetorTwo());
-				SendFile.updateSPLV4Master[id-1]=-1;
-				slave(2);
+				
+				if(!Info.getTypeColetor().equals("8886")){
+					int id = Integer.parseInt(Info.getIDColetorOne());
+					SendFile.updateSPLV4Master[id-1]=-1;
+					slave(1);
+					id = Integer.parseInt(Info.getIDColetorTwo());
+					SendFile.updateSPLV4Master[id-1]=-1;
+					slave(2);	
+				}
+				
+				
 			}else{
 				setSucess(false);
 			}
 		}
-	configBTN();
 	refreshTable(coletores);
+	configBTN();
 	}
 
 	public static boolean ckeckFile(int coletor) {
@@ -226,8 +241,13 @@ public class StoreUpgradeToColetor {
 				}else{
 					Principal.configBtn(2, false);
 					Principal.configBtn(3, false);
-					Principal.configBtn(4, true);
 					Principal.configBtn(5, true);	
+				}
+				
+				if(TableInfo.contains("ENVIAR")) {
+					Principal.configBtn(4, true);
+				}else{
+					Principal.configBtn(4, false);
 				}
 			}
 		}else{
