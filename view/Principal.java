@@ -423,7 +423,7 @@ public class Principal extends JFrame {
 		fileChooser.show("Select file (.run)", false);
 
 		File arquivo = fileChooser.getSelectedFile();
-
+		
 		if (!(arquivo == null) && arquivo.exists() && arquivo.getName().contains(".run")) {
 			Info.setFileUpgrade(arquivo);
 			configBtn(3, true);

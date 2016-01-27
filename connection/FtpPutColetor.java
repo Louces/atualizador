@@ -51,6 +51,7 @@ public class FtpPutColetor {
 
 			ftp.setFileType(FTP.BINARY_FILE_TYPE);
 			Console.print("Transmitindo " + file.getName() +" para " + server);
+			//ftp.storeFile("/root/config/"+file.getName(), is);
 			ftp.storeFile(file.getName(), is);
 			Console.print("Transmissão concluida");
 			System.out.print(ftp.getReplyString());
@@ -65,6 +66,8 @@ public class FtpPutColetor {
 	progressBar.setVisible(false);	
 	}
 
+
+	
 	void setCopyStreamListener(CopyStreamAdapter streamListener) {
 		throw new UnsupportedOperationException("Not supported yet."); 
 	}
