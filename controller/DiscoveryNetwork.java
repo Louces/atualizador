@@ -248,8 +248,9 @@ public class DiscoveryNetwork {
 	    conexao.sendCommand("rm -rf *bkp*");
 	    Console.print("Obtendo dados.");
 	    comando = conexao.sendCommand
-		("cat config/srouter_info.conf | grep -m 1 ne_id | awk '{print $3}'");
-		spvlMaster.setId(FilterCommand.filter(comando));
+		("cat config/srouter_info.conf | grep -m 1 ne | awk -F \"=\" '{print $2}'");
+	    String ID = FilterCommand.filter(comando).trim();
+		spvlMaster.setId(ID);
 		comando = conexao.sendCommand
 		("cat /proc/cmdline | awk '{print $1}'");
 		spvlMaster.setSerialNumber(FilterCommand.filter(comando).replaceAll("sn=", ""));

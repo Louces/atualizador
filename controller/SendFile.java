@@ -103,6 +103,8 @@ public class SendFile {
 		
 		
 		for (int j = 0; j < 5; j++) {
+			if((ID-1)>=5)
+				break;
 			if (updateSPVL4Slave[ID - 1][j] == 1) {
 				ftpgetSlave(conexao, ID - 1, j);
 			}

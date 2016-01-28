@@ -1,5 +1,7 @@
 package supervisor;
 
+import javax.swing.JOptionPane;
+
 import connection.TelnetConnection;
 import controller.Console;
 import controller.FilterCommand;
@@ -119,11 +121,23 @@ public class Supervisor4Master implements Supervisor {
 	
 	public void telnet0900(TelnetConnection conexao, int server) {
 
-		String command = conexao.sendCommand("cat config/srouter_info.conf | grep -m 1 ne | awk '{print $3}'");
-		String ID =FilterCommand.filter(command);
-		srouters[Integer.parseInt(ID)-1]=true;
+		//String command = conexao.sendCommand("cat config/srouter_info.conf | grep -m 1 ne | awk '{print $3}'");
+		String command = conexao.sendCommand("cat config/srouter_info.conf | grep -m 1 ne | awk -F \"=\" '{print $2}'");
+		String ID =FilterCommand.filter(command).trim();
+		int IDparse;
+		
+		try {
+			IDparse = Integer.parseInt(ID);
+			srouters[IDparse-1]=true;
+		} catch (NumberFormatException e) {
+			String aux = JOptionPane.showInputDialog("Não foi possivel obter o ID do coletor " + server+". \nInsira manualmente o ID : ");
+			IDparse=Integer.parseInt(aux.trim());
+			e.printStackTrace();
+		}
+		
+		
 		conexao.write("telnet 0 9000");
-		conexao.readUntil("SROUTER NE ID [#" + ID + "]>");
+		conexao.readUntil("SROUTER NE ID [#" + IDparse + "]>");
 		conexao.write("6");
 		String srouter = conexao.readUntil("SROUTER NE ID [#" + ID + "]>");
 		conexao.write("9");
