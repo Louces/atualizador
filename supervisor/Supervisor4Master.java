@@ -130,8 +130,8 @@ public class Supervisor4Master implements Supervisor {
 			IDparse = Integer.parseInt(ID);
 			srouters[IDparse-1]=true;
 		} catch (NumberFormatException e) {
-			String aux = JOptionPane.showInputDialog("Não foi possivel obter o ID do coletor " + server+". \nInsira manualmente o ID : ");
-			IDparse=Integer.parseInt(aux.trim());
+			String aux = JOptionPane.showInputDialog("Não foi possivel obter o ID do coletor " + server+".\nInsira manualmente o ID : ");
+			IDparse=Integer.parseInt(aux);
 			e.printStackTrace();
 		}
 		

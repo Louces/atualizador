@@ -24,6 +24,7 @@ public class TelnetConnection {
 		this.server = server;
 	}
 
+	
 	public void connectVlan100() {
 		try {
 			telnet.connect(getServer(), 23);
@@ -55,16 +56,6 @@ public class TelnetConnection {
 		readUntil("Password: ");
 		write("root");
 		readUntil('$' + " ");
-	}
-
-	public String telnet0900(String ID) {
-		write("telnet 0 9000");
-		readUntil("SROUTER NE ID [#" + ID + "]>");
-		write("6");
-		String Srouter = readUntil("SROUTER NE ID [#" + ID + "]>");
-		write("9");
-		readUntil('$' + " ");
-		return Srouter;
 	}
 
 	public String sendCommand(String command) {

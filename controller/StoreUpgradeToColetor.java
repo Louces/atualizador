@@ -268,8 +268,8 @@ public class StoreUpgradeToColetor {
 		}
 		
 		for (int j = 0; j < 5; j++) {
-			if((Integer.parseInt(id)-1)>=5)
-				break;
+			/*if((Integer.parseInt(id)-1)>=5)
+				break;*/
 			if (SendFile.updateSPVL4Slave[Integer.parseInt(id)-1][j] == 1) {
 				SendFile.ftpgetSlave(conexao, Integer.parseInt(id)-1, j);
 			}

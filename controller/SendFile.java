@@ -10,9 +10,9 @@ public class SendFile {
 	private static JProgressBar progressBar = Principal.getProgressBar();
 	private static String name;
 	public static int updateSPLV4Master[] = new int [14];
-	public static int updateSPVL4Slave[][] = new int [5][5];
+	public static int updateSPVL4Slave[][] = new int [14][5];
 	public static String serialMaster[] = new String[14];
-	public static String serialSlave[][] = new String [5][5];
+	public static String serialSlave[][] = new String [14][5];
 	
 	
 	public static void sendMaster(){
@@ -103,8 +103,8 @@ public class SendFile {
 		
 		
 		for (int j = 0; j < 5; j++) {
-			if((ID-1)>=5)
-				break;
+			/*if((ID-1)>=5)
+				break;*/
 			if (updateSPVL4Slave[ID - 1][j] == 1) {
 				ftpgetSlave(conexao, ID - 1, j);
 			}
