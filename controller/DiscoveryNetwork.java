@@ -48,9 +48,6 @@ public class DiscoveryNetwork {
 			default:
 			break;
 			}
-		Principal.configBtn(1, false);
-		Principal.configBtn(2, true);
-		
 		}else if(Info.getTypeColetor().contains("8887")){
 			switch (Info.getnColetoresValidos()) {
 			case 1:
@@ -65,12 +62,10 @@ public class DiscoveryNetwork {
 			default:
 			break;
 			}
+		}else{}
+		
 		Principal.configBtn(1, false);
 		Principal.configBtn(2, true);
-		
-		}else{
-			
-		}
 		Console.print("Rede descoberta.");	
 	}
 	
@@ -219,20 +214,14 @@ public class DiscoveryNetwork {
 	}
 	
 	public void getInfoLegacy(TelnetConnection conexao){
-		String comando;
-		Console.print("Apagando arquivos remanescentes...");
-		conexao.sendCommand("rm *upgrade*");
-	    conexao.sendCommand("rm -rf *bkp*");
-	    Console.print("Obtendo dados.");
+		eraseFilesSPVL4(conexao);
+		Console.print("Obtendo dados.");
+	    String comando;
 	    comando = conexao.sendCommand
 		("cat supervisor.config | grep -m 1 Numero | awk '{print $5}'");
 		spvlLegacy.setId(FilterCommand.filter(comando));
-		comando = conexao.sendCommand
-		("cat /proc/cmdline | awk '{print $1}'");
-		spvlLegacy.setSerialNumber(FilterCommand.filter(comando).replaceAll("sn=", ""));
-		comando = conexao.sendCommand
-		("./supervisor -v | awk '{print $2}'");
-		spvlLegacy.setVersaoAplicacao(FilterCommand.filter(comando).replaceFirst("V", ""));
+		spvlLegacy.setSerialNumber(getSerialSPVL4(conexao));
+		spvlLegacy.setVersaoAplicacao(getSerialSPVL4(conexao));
 		spvlLegacy.setStatus("Descoberto");
 		Console.print("Adicionando dados...");
 		supervisores.add(spvlLegacy);
@@ -242,23 +231,17 @@ public class DiscoveryNetwork {
 		spvlMaster = new Supervisor4Master();
 		spvlMaster.setConexaoColetor(conexao);
 		conexao.connectVlan101(conexaoVLAN101);	
-		String comando;
-		Console.print("Apagando arquivos remanescentes...");
-		conexao.sendCommand("rm *upgrade*");
-	    conexao.sendCommand("rm -rf *bkp*");
+		eraseFilesSPVL4(conexao);
 	    Console.print("Obtendo dados.");
+	    String comando;
 	    comando = conexao.sendCommand
 		("cat config/srouter_info.conf | grep -m 1 ne | awk -F \"=\" '{print $2}'");
 	    String ID = FilterCommand.filter(comando).trim();
 		spvlMaster.setId(ID);
-		comando = conexao.sendCommand
-		("cat /proc/cmdline | awk '{print $1}'");
-		spvlMaster.setSerialNumber(FilterCommand.filter(comando).replaceAll("sn=", ""));
+		spvlMaster.setSerialNumber(getSerialSPVL4(conexao));
 		comando = conexao.sendCommand("cat config/srouter_info.conf | grep ne_name | awk -F = '{print $2}'");
 		spvlMaster.setNameNE(FilterCommand.filter(comando));
-		comando = conexao.sendCommand
-		("./supervisor -v | awk '{print $2}'");
-		spvlMaster.setVersaoAplicacao(FilterCommand.filter(comando).replaceFirst("V", ""));
+		spvlMaster.setVersaoAplicacao(getVersionSPVL4(conexao));
 		spvlMaster.setStatus("Descoberto");
 		spvlMaster.discoverySlave(conexao);
 		Console.print("Adicionando dados...");
@@ -267,6 +250,20 @@ public class DiscoveryNetwork {
 		SendFile.serialMaster[Integer.parseInt(spvlMaster.getId())-1]=spvlMaster.getSerialNumber();
 		conexao.disconnect();	
 	}
-
 	
+	public void eraseFilesSPVL4(TelnetConnection conexao){
+		Console.print("Apagando arquivos remanescentes...");
+		conexao.sendCommand("rm *upgrade*");
+	    conexao.sendCommand("rm -rf *bkp*");
+	}
+	
+	public String getSerialSPVL4(TelnetConnection conexao){
+		String comando = conexao.sendCommand("cat /proc/cmdline | awk '{print $1}'");
+		return FilterCommand.filter(comando).replaceAll("sn=", "");
+	}
+	
+	public String getVersionSPVL4(TelnetConnection conexao){
+		String comando = conexao.sendCommand("./supervisor -v | awk '{print $2}'");
+		return FilterCommand.filter(comando).replaceFirst("V", "");
+	}
 }

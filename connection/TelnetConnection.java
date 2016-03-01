@@ -5,6 +5,13 @@ import java.io.PrintStream;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
+
+/**
+ * Esta classa é usada para conexao telnet com o hosts e suas vlans internas.
+ * @author Fabiano Louzada Cesario.
+ * @version 1.0
+ *
+ */
 public class TelnetConnection {
 	private TelnetClient telnet = new TelnetClient();
 	private InputStream in;
@@ -12,6 +19,10 @@ public class TelnetConnection {
 	private char prompt = '$';
 	private String server;
 	
+	
+	/**
+	 * @param é o IP de DCN.
+	 */
 	public TelnetConnection(String server) {
 		setServer(server);
 	}
@@ -25,6 +36,10 @@ public class TelnetConnection {
 	}
 
 	
+	/**
+	 * Conecta na Vlan100 (DCN).
+	 * @exception pode gerar uma exception ao conectar.
+	 */
 	public void connectVlan100() {
 		try {
 			telnet.connect(getServer(), 23);
@@ -40,6 +55,10 @@ public class TelnetConnection {
 		}
 	}
 
+	/**Conecta na Vlan101 via Canal de supervisão.
+	 * Regra: 169.254.(127+ID).1 onde o ID é o endereço do NE no barramento.
+	 * @param IP é a endereço da subrede na VLAN101. 
+	 */
 	public void connectVlan101(String IP) {
 		write("telnet " + IP);
 		readUntil("login: ");
@@ -49,6 +68,10 @@ public class TelnetConnection {
 		readUntil('$' + " ");
 	}
 	
+	
+	/**Conecta na Vlan102
+	 * @param IP é o IP da subrede na Vlan102.
+	 */
 	public void connectVlan102(String IP){
 		write("telnet " + IP);
 		readUntil("login: ");
@@ -57,7 +80,12 @@ public class TelnetConnection {
 		write("root");
 		readUntil('$' + " ");
 	}
-
+	
+	
+	/**Executa um comando no terminal linux.
+	 * @param command é o comando a ser executado.
+	 * @return
+	 */
 	public String sendCommand(String command) {
 		try {
 			write(command);
@@ -68,10 +96,12 @@ public class TelnetConnection {
 		return null;
 	}
 
+	
 	public void disconnect() {
 		sendCommand("exit");
 	}
 
+	
 	public void closeSession() {
 		try {
 			telnet.disconnect();

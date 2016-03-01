@@ -25,7 +25,6 @@ public class Supervisor4Master implements Supervisor {
 	private String idVlan201;
 	private String versaoAplicacao;
 	private boolean containsSlave;
-	private int numeroSPVL90;
 	private int[] slaves = new int[5];
 	private Supervisor4Slave[] escravo = new Supervisor4Slave[5];
 	private int coletor;
@@ -36,12 +35,9 @@ public class Supervisor4Master implements Supervisor {
 	private boolean isUpdate;
 	
 	
+	
 	public Supervisor4Slave[] getEscravo() {
 		return escravo;
-	}
-
-	public void setEscravo(Supervisor4Slave[] escravo) {
-		this.escravo = escravo;
 	}
 
 	public String getStatus() {
@@ -83,14 +79,6 @@ public class Supervisor4Master implements Supervisor {
 	public void setVersaoAplicacao(String versaoAplicacao) {
 		this.versaoAplicacao = versaoAplicacao;
 	}
-
-	public int getNumeroSPVL90() {
-		return numeroSPVL90;
-	}
-
-	public void setNumeroSPVL90(int numeroSPVL90) {
-		this.numeroSPVL90 = numeroSPVL90;
-	}
     
 	public void stopSupervisor(TelnetConnection conexao){
 		Console.print("Preparando atualização...");
@@ -121,7 +109,6 @@ public class Supervisor4Master implements Supervisor {
 	
 	public void telnet0900(TelnetConnection conexao, int server) {
 
-		//String command = conexao.sendCommand("cat config/srouter_info.conf | grep -m 1 ne | awk '{print $3}'");
 		String command = conexao.sendCommand("cat config/srouter_info.conf | grep -m 1 ne | awk -F \"=\" '{print $2}'");
 		String ID =FilterCommand.filter(command).trim();
 		int IDparse;
@@ -134,7 +121,6 @@ public class Supervisor4Master implements Supervisor {
 			IDparse=Integer.parseInt(aux);
 			e.printStackTrace();
 		}
-		
 		
 		conexao.write("telnet 0 9000");
 		conexao.readUntil("SROUTER NE ID [#" + IDparse + "]>");

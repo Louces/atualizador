@@ -53,7 +53,7 @@ public class Principal extends JFrame {
 	private static JProgressBar progressBar;
 	private static String md5;
 	
-	long inicio,fim;
+	//long inicio,fim;
 	
 	public static Label getLbTypeColetor() {
 		return lbTypeColetor;

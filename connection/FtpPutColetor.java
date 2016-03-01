@@ -14,6 +14,13 @@ import controller.Console;
 import controller.Info;
 import view.Principal;
 
+
+/**
+ * Esta classe é usada para transferencia de arquivos via FTP. 
+ * @author Fabiano Louzada Cesario.
+ * @version 1.0
+ *
+ */
 public class FtpPutColetor {
 
 	private String user = "root";
@@ -21,6 +28,10 @@ public class FtpPutColetor {
 	private JProgressBar progressBar = Principal.getProgressBar();
 	private File file = Info.getFileUpgrade();
 
+	
+	/**
+	 * @param server é o endereço de DCN do host.
+	 */
 	public FtpPutColetor(String server) {
 		progressBar.setValue(0);
 		progressBar.setString(0 + "%");
@@ -63,17 +74,7 @@ public class FtpPutColetor {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	progressBar.setVisible(false);	
-	}
-
-
-	
-	void setCopyStreamListener(CopyStreamAdapter streamListener) {
-		throw new UnsupportedOperationException("Not supported yet."); 
-	}
-
-	void storeFile(String name, FileInputStream fis) {
-		throw new UnsupportedOperationException("Not supported yet."); 
+		progressBar.setVisible(false);	
 	}
 
 }

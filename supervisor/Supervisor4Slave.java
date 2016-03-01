@@ -133,7 +133,4 @@ public class Supervisor4Slave extends Supervisor4Master{
 		}
 		
 	}
-
-	
-
 }
