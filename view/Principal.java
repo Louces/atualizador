@@ -24,6 +24,9 @@ import javax.swing.JTable;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
+import com.jcraft.jsch.Session;
+
+import connection.SSHtunneling;
 import connection.ValidaIP;
 import controller.Console;
 import controller.DiscoveryNetwork;
@@ -52,7 +55,8 @@ public class Principal extends JFrame {
 	private static Button btnAtualizar;
 	private static JProgressBar progressBar;
 	private static String md5;
-	
+	SSHtunneling tunnel;
+	private Session session;
 	//long inicio,fim;
 	
 	public static Label getLbTypeColetor() {
@@ -109,11 +113,11 @@ public class Principal extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Principal frame = new Principal();
+					Principal frame = new Principal(args);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -125,7 +129,22 @@ public class Principal extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Principal() {
+	public Principal(String[] argumentos) {
+		
+/*		if (argumentos.length == 3) {
+			
+			try {
+				tunnel= new SSHtunneling(argumentos[0], argumentos[1], argumentos[2]);
+				session = tunnel.getSession();
+				session.connect();
+				session.setPortForwardingL("172.16.5.106",0, "10.66.12.26", 23);
+			} catch (Exception e) {
+				Console.print("Falha ao estabelecer tunnel ssh.");
+				e.printStackTrace();
+				return;
+			}
+		}*/
+		
 		initComponents();
 		monitoringIP();
 	}
@@ -134,7 +153,7 @@ public class Principal extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/padtec_icone.png")));
 		
 		setResizable(false);
-		setTitle("Padtec S/A - V1.7.2");
+		setTitle("Padtec S/A - V1.7.3");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 527, 578);
 		contentPane = new JPanel();

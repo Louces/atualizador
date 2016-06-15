@@ -93,6 +93,7 @@ public class Supervisor4Master implements Supervisor {
 	public void clear(TelnetConnection conexao){
 		conexao.sendCommand("rm *upgrade*");
 	    conexao.sendCommand("rm -rf *bkp*");
+	    conexao.sendCommand("rm *default_config.sh*");
 	}
 	
 	public void refreshTable(TelnetConnection conexao, int tipo) {
@@ -214,12 +215,14 @@ public class Supervisor4Master implements Supervisor {
 						conexao.sendCommand("killall klogd");
 						setUpdate(true);
 						Console.print("Atualizando tabela");
+						runDefaultConfig(conexao); //defaultConfig
 						refreshTable(conexao,8887);
 						rebootNotColetor(conexao);
 						conexao.disconnect();
 						return true;
 					} else if (status.contains(msgSyslognNoChange)) {
 						Console.print("Atualizando tabela");
+						runDefaultConfig(conexao); //defaultConfig
 						refreshTable(conexao,8887);
 						setUpdate(true);
 						rebootNotColetor(conexao);
@@ -264,6 +267,7 @@ public class Supervisor4Master implements Supervisor {
 				Console.print("Apagando arquivos remanescentes de "+"169.254."+(i+1)+".37");
 				conexao.sendCommand("rm *upgrade*");
 			    conexao.sendCommand("rm -rf *bkp*");
+			    conexao.sendCommand("rm *default_config.sh*");
 			    Console.print("Obtendo dados.");
 			    supervisor.setId(getId());
 			    supervisor.setIdMaster(Integer.parseInt(getId()));
@@ -284,7 +288,21 @@ public class Supervisor4Master implements Supervisor {
 			}
 		}
 	}
-
+	
+	public void runDefaultConfig(TelnetConnection conexao){
+		String contemDefaultConfig = conexao.sendCommand("ls");
+		
+		if(contemDefaultConfig.contains("default_config.sh")){
+			Console.print("Executando default config no supervisor master " + getSerialNumber()+".");
+			conexao.sendCommand("./default_config.sh", "(s/n) ");
+			conexao.sendCommand("s", "(s/n) ");
+			conexao.sendCommand("s", "(s/n) ");
+			conexao.sendCommand("s");
+		}
+		
+	}
+	
+	
 	public boolean isContainsSlave() {
 		return containsSlave;
 	}

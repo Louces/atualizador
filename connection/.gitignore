@@ -3,3 +3,5 @@
 /TelnetConnection.class
 /ValidaIP$1.class
 /ValidaIP.class
+/SSHtunneling.class
+/SSHtunneling$localUserInfo.class

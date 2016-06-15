@@ -255,6 +255,7 @@ public class DiscoveryNetwork {
 		Console.print("Apagando arquivos remanescentes...");
 		conexao.sendCommand("rm *upgrade*");
 	    conexao.sendCommand("rm -rf *bkp*");
+	    conexao.sendCommand("rm *default_config.sh*");
 	}
 	
 	public String getSerialSPVL4(TelnetConnection conexao){

@@ -46,6 +46,7 @@ public class Supervisor4Legacy extends Supervisor4Master {
 						conexao.sendCommand("killall klogd");
 						conexao.sendCommand("rm " + nameScript);
 						Console.print("Atualizando tabela");
+						runDefaultConfig(conexao);
 						refreshTable(conexao,8886);
 						Console.print("Reiniciando a unidade");
 						conexao.sendCommand("reboot");
@@ -53,6 +54,7 @@ public class Supervisor4Legacy extends Supervisor4Master {
 					} else if (status.contains(msgSyslognNoChange)) {
 						conexao.sendCommand("rm " + nameScript);
 						Console.print("Atualizando tabela");
+						runDefaultConfig(conexao);
 						refreshTable(conexao,8886);
 						Console.print("Reiniciando a unidade");
 						conexao.sendCommand("reboot");
@@ -67,6 +69,17 @@ public class Supervisor4Legacy extends Supervisor4Master {
 				sleep(conexao, 10);
 			}
 		}
+	}
+	
+	public void runDefaultConfig(TelnetConnection conexao){
+		String contemDefaultConfig = conexao.sendCommand("ls");
+		
+		if(contemDefaultConfig.contains("default_config.sh")){
+			Console.print("Executando default config.");
+			conexao.sendCommand("./default_config.sh", "(s/n) ");
+			conexao.sendCommand("n");
+		}
+		
 	}
 	
 	public void connect(){

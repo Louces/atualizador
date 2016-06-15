@@ -100,6 +100,7 @@ public class Supervisor4Slave extends Supervisor4Master{
 							conexao.sendCommand("killall klogd");
 							Console.print("Atualizando tabela");
 							refreshTable(conexao,8887);
+							runDefaultConfig(conexao);//defaultConfig
 							conexao.sendCommand("reboot");
 							TableInfo.refresh(getSerialNumber(), 4, "Unidade reinicializada");
 							TableInfo.refresh(getSerialNumber(), 5, "-");
@@ -110,6 +111,7 @@ public class Supervisor4Slave extends Supervisor4Master{
 						} else if (status.contains(msgSyslognNoChange)) {
 							Console.print("Atualizando tabela");
 							refreshTable(conexao,8887);
+							runDefaultConfig(conexao);//defaultConfig
 							conexao.sendCommand("reboot");
 							TableInfo.refresh(getSerialNumber(), 4, "Unidade reinicializada");
 							TableInfo.refresh(getSerialNumber(), 5, "-");
@@ -130,6 +132,17 @@ public class Supervisor4Slave extends Supervisor4Master{
 			
 		}else{
 			return false;
+		}
+		
+	}
+	
+	public void runDefaultConfig(TelnetConnection conexao){
+		String contemDefaultConfig = conexao.sendCommand("ls");
+		
+		if(contemDefaultConfig.contains("default_config.sh")){
+			Console.print("Executando default config no supervidor slave " +getIdSlave()+".");
+			conexao.sendCommand("./default_config.sh", "(s/n) ");
+			conexao.sendCommand("n");
 		}
 		
 	}

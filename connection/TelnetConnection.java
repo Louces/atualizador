@@ -95,6 +95,16 @@ public class TelnetConnection {
 		}
 		return null;
 	}
+	
+	public String sendCommand(String command, String readUntil) {
+		try {
+			write(command);
+			return readUntil(readUntil);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	
 	public void disconnect() {
