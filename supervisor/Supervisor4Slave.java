@@ -3,6 +3,7 @@ package supervisor;
 import view.Principal;
 import connection.TelnetConnection;
 import controller.Console;
+import controller.FilterCommand;
 import controller.Info;
 import controller.TableInfo;
 
@@ -65,6 +66,17 @@ public class Supervisor4Slave extends Supervisor4Master{
 			
 			conexao.connectVlan101("169.254."+(Integer.parseInt(getId())+127)+".1");
 			conexao.connectVlan102("169.254."+getIdSlave()+".37");
+			//Tratando o problema de espaço
+			String espacoString = FilterCommand.filter(conexao.sendCommand("df -h | grep -m 1 /dev | awk '{print $5}'").replaceAll("%",""));
+			int espaco = Integer.parseInt(espacoString);
+			
+			if(espaco >= 80){
+				Console.print("Atualização falhou devido a falta de espaço.");
+				TableInfo.refresh(getSerialNumber(), 4, "Falta de espaço.");
+				conexao.disconnect();
+				return false;
+			}//Tratando o problema de espaço
+			
 			stopSupervisor(conexao);
 			Console.print("Iniciando atualização em : " + getSerialNumber());
 			nameScript = Info.getFileUpgrade().getName();

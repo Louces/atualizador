@@ -221,7 +221,7 @@ public class DiscoveryNetwork {
 		("cat supervisor.config | grep -m 1 Numero | awk '{print $5}'");
 		spvlLegacy.setId(FilterCommand.filter(comando));
 		spvlLegacy.setSerialNumber(getSerialSPVL4(conexao));
-		spvlLegacy.setVersaoAplicacao(getSerialSPVL4(conexao));
+		spvlLegacy.setVersaoAplicacao(getVersionSPVL4(conexao));
 		spvlLegacy.setStatus("Descoberto");
 		Console.print("Adicionando dados...");
 		supervisores.add(spvlLegacy);
