@@ -8,6 +8,7 @@ import controller.FilterCommand;
 import controller.Info;
 import controller.SendFile;
 import controller.TableInfo;
+import view.Principal;
 
 public class Supervisor4Master implements Supervisor {
 
@@ -340,6 +341,7 @@ public class Supervisor4Master implements Supervisor {
 		}else{
 			TableInfo.refresh(getSerialNumber(), 4, "Aguardando Reboot.");
 			TableInfo.refresh(getSerialNumber(), 5, "-");
+			Principal.flagRebootColetor = true;
 		}
 		
 	}

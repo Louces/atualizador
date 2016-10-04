@@ -27,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import com.jcraft.jsch.Session;
 
 import connection.SSHtunneling;
+import connection.TelnetConnection;
 import connection.ValidaIP;
 import controller.Console;
 import controller.DiscoveryNetwork;
@@ -35,6 +36,7 @@ import controller.GenerateMD5;
 import controller.Info;
 import controller.SendFile;
 import controller.StoreUpgradeToColetor;
+import controller.TableInfo;
 import controller.UpdateSupervisor;
 
 @SuppressWarnings("serial")
@@ -53,10 +55,13 @@ public class Principal extends JFrame {
 	private static Button btnSelecionarScript;
 	private static Button btnCarregarScript;
 	private static Button btnAtualizar;
+	private static Button btnReinicioColetores;
 	private static JProgressBar progressBar;
 	private static String md5;
+	public static boolean flagRebootColetor;
 	SSHtunneling tunnel;
 	private Session session;
+	
 	//long inicio,fim;
 	
 	public static Label getLbTypeColetor() {
@@ -153,9 +158,9 @@ public class Principal extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/padtec_icone.png")));
 		
 		setResizable(false);
-		setTitle("Padtec S/A - V1.7.4");
+		setTitle("Padtec S/A - V1.7.5");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 527, 578);
+		setBounds(100, 100, 527, 603);
 		contentPane = new JPanel();
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
@@ -179,15 +184,15 @@ public class Principal extends JFrame {
 		//txfColetorUm.setText("172.30.0.236");
 
 		btnDescobrir = new Button("Descobrir");
-		btnDescobrir.setBounds(10, 10, 105, 23);
+		btnDescobrir.setBounds(10, 10, 105, 22);
 		contentPane.add(btnDescobrir);
 
 		btnEviarScript = new Button("Enviar Script");
-		btnEviarScript.setBounds(10, 97, 105, 23);
+		btnEviarScript.setBounds(10, 97, 105, 22);
 		contentPane.add(btnEviarScript);
 
 		btnAtualizar = new Button("Atualizar");
-		btnAtualizar.setBounds(10, 126, 105, 23);
+		btnAtualizar.setBounds(10, 126, 105, 22);
 		contentPane.add(btnAtualizar);
 
 		progressBar = new JProgressBar();
@@ -195,7 +200,7 @@ public class Principal extends JFrame {
 		progressBar.setStringPainted(true);
 		progressBar.setFont(new Font("Arial Black", Font.BOLD, 14));
 		progressBar.setBorder(new LineBorder(new Color(0, 0, 0)));
-		progressBar.setBounds(131, 68, 122, 52);
+		progressBar.setBounds(131, 126, 122, 52);
 		contentPane.add(progressBar);
 		progressBar.setForeground(Color.GRAY);
 		progressBar.setVisible(false);
@@ -206,7 +211,7 @@ public class Principal extends JFrame {
 				selectFile();
 			}
 		});
-		btnSelecionarScript.setBounds(10, 39, 105, 23);
+		btnSelecionarScript.setBounds(10, 39, 105, 22);
 		contentPane.add(btnSelecionarScript);
 
 		btnCarregarScript = new Button("Carregar Script");
@@ -220,21 +225,21 @@ public class Principal extends JFrame {
 			        }).start();
 			}
 		});
-		btnCarregarScript.setBounds(10, 68, 105, 23);
+		btnCarregarScript.setBounds(10, 68, 105, 22);
 		contentPane.add(btnCarregarScript);
 
 		lbTypeColetor = new Label("Tipo de Coletor : ");
-		lbTypeColetor.setBounds(131, 38, 331, 21);
+		lbTypeColetor.setBounds(131, 38, 229, 21);
 		contentPane.add(lbTypeColetor);
 
 		textAreaConsole = new TextArea();
-		textAreaConsole.setBounds(10, 373, 501, 165);
+		textAreaConsole.setBounds(10, 400, 501, 165);
 		contentPane.add(textAreaConsole);
 
 		Panel panel = new Panel();
 		panel.setFocusTraversalKeysEnabled(false);
 		panel.setFocusable(false);
-		panel.setBounds(10, 155, 501, 212);
+		panel.setBounds(10, 188, 501, 206);
 		contentPane.add(panel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		
@@ -269,6 +274,24 @@ public class Principal extends JFrame {
 		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] {
 				"Site", "S/N", "M/E", "Versão", "Status",
 				"Check" }));
+		
+		btnReinicioColetores = new Button("Reiniciar Coletores");
+		btnReinicioColetores.setEnabled(false);
+		btnReinicioColetores.setForeground(Color.RED);
+		btnReinicioColetores.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				 new Thread(new Runnable() {
+			            @Override
+			            public void run() {
+			            	reinicioColetor();
+			            }
+			        }).start();
+			}
+		});
+		btnReinicioColetores.setFont(new Font("Dialog", Font.PLAIN, 11));
+		btnReinicioColetores.setBackground(Color.ORANGE);
+		btnReinicioColetores.setBounds(10, 155, 105, 22);
+		contentPane.add(btnReinicioColetores);
 		table.getColumnModel().getColumn(0).setPreferredWidth(50);
 		table.getColumnModel().getColumn(1).setPreferredWidth(10);  
 		table.getColumnModel().getColumn(2).setPreferredWidth(40);  
@@ -313,6 +336,31 @@ public class Principal extends JFrame {
 	setEnableBtn(1);
 	}
 	
+	public void reinicioColetor(){
+		configBtn(4, false);
+		configBtn(5, false);
+		
+		if(Info.getServerOne()!=null){
+			TelnetConnection conexao = Info.getServerOne();
+			conexao.sendCommand("reboot");
+			TableInfo.refresh(Info.getSnColetorOne(), 4, "Unidade reinicializada.");
+		}
+		
+		if(Info.getServerTwo()!=null){
+			TelnetConnection conexao = Info.getServerTwo();
+			conexao.sendCommand("reboot");
+			TableInfo.refresh(Info.getSnColetorTwo(), 4, "Unidade reinicializada.");
+		}
+		Console.print("Por segurança a aplicação sera finalizada em 15 segundos");
+		try {
+			Thread.sleep(15000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.exit(0);
+	}
+	
 	public void btnAtualizar(){
 		getTextAreaConsole().setText("");
 		UpdateSupervisor atualizar = new UpdateSupervisor();
@@ -320,6 +368,7 @@ public class Principal extends JFrame {
 	}
 	
 	public void btnDescobrir(){
+		Principal.flagRebootColetor = false;
 		getTextAreaConsole().setText("");
 		setDisable(1);
 		DiscoveryNetwork descobrir = new DiscoveryNetwork();
@@ -338,9 +387,14 @@ public class Principal extends JFrame {
 	}
 	
 	public void btnEnviar(){
+		configBtn(6, false);
 		getTextAreaConsole().setText("");
 		
 		SendFile.sendMaster();
+		
+		if(flagRebootColetor){
+			configBtn(6, true);
+		}
 	}
 
 	public void monitoringIP() {
@@ -384,7 +438,9 @@ public class Principal extends JFrame {
 			break;
 		case 5:
 			getBtnAtualizar().setEnabled(true);
-			break;	
+			break;
+		case 6:
+			getBtnReinicioColetores().setEnabled(true);
 		default:
 		break;
 		}
@@ -406,6 +462,9 @@ public class Principal extends JFrame {
 			break;
 		case 5:
 			getBtnAtualizar().setEnabled(false);
+			break;
+		case 6:
+			getBtnReinicioColetores().setEnabled(false);
 			break;	
 		default:
 		break;
@@ -430,6 +489,10 @@ public class Principal extends JFrame {
 
 	public static Button getBtnAtualizar() {
 		return btnAtualizar;
+	}
+	
+	public static Button getBtnReinicioColetores() {
+		return btnReinicioColetores;
 	}
 
 	public static JProgressBar getProgressBar() {
@@ -487,4 +550,5 @@ public class Principal extends JFrame {
 			break;
 		}
 	}
+	
 }

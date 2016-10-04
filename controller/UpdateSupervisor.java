@@ -93,7 +93,11 @@ public class UpdateSupervisor {
 					TableInfo.refresh(Info.getSnColetorTwo(), 4, "Unidade reinicializada.");
 				}
 			}
-			configBTN(8887);	
+			configBTN(8887);
+			
+			if(Principal.flagRebootColetor){
+				Principal.configBtn(6,true);
+			}
 		}
 	}
 
@@ -101,6 +105,7 @@ public class UpdateSupervisor {
 		Principal.configBtn(3, false);
 		Principal.configBtn(4, false);
 		Principal.configBtn(5, false);
+		Principal.configBtn(6, false);
 		typeColetor = Info.getTypeColetor();
 		SPVL = DiscoveryNetwork.getSupervisores();
 	}
