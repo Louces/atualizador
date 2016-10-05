@@ -183,16 +183,23 @@ public class DiscoveryNetwork {
 			switch (Vlan101[i]) {
 			case 1:
 				conexao = Info.getServerOne();
-				getInfoMaster(Vlan, conexao);
+				if(!getInfoMaster(Vlan, conexao)){
+					Vlan101[i] = 0;
+					SendFile.updateSPLV4Master[i] = 0;
+				}
 				break;
 			case 2:
 				conexao = Info.getServerTwo();
-				getInfoMaster(Vlan, conexao);
-				break;
+				if(!getInfoMaster(Vlan, conexao)){
+					Vlan101[i] = 0;
+					SendFile.updateSPLV4Master[i] = 0;
+				}
 			case 3:
 				conexao = Info.getServerOne();
-				getInfoMaster(Vlan, conexao);
-				break;
+				if(!getInfoMaster(Vlan, conexao)){
+					Vlan101[i] = 0;
+					SendFile.updateSPLV4Master[i] = 0;
+				}
 			default:
 				break;
 			}
@@ -227,28 +234,36 @@ public class DiscoveryNetwork {
 		supervisores.add(spvlLegacy);
 	}
 	
-	public void getInfoMaster(String conexaoVLAN101 , TelnetConnection conexao){
+	public boolean getInfoMaster(String conexaoVLAN101 , TelnetConnection conexao){
 		spvlMaster = new Supervisor4Master();
 		spvlMaster.setConexaoColetor(conexao);
-		conexao.connectVlan101(conexaoVLAN101);	
-		eraseFilesSPVL4(conexao);
-	    Console.print("Obtendo dados.");
-	    String comando;
-	    comando = conexao.sendCommand
-		("cat config/srouter_info.conf | grep -m 1 ne | awk -F \"=\" '{print $2}'");
-	    String ID = FilterCommand.filter(comando).trim();
-		spvlMaster.setId(ID);
-		spvlMaster.setSerialNumber(getSerialSPVL4(conexao));
-		comando = conexao.sendCommand("cat config/srouter_info.conf | grep ne_name | awk -F = '{print $2}'");
-		spvlMaster.setNameNE(FilterCommand.filter(comando));
-		spvlMaster.setVersaoAplicacao(getVersionSPVL4(conexao));
-		spvlMaster.setStatus("Descoberto");
-		spvlMaster.discoverySlave(conexao);
-		Console.print("Adicionando dados...");
-		supervisores.add(spvlMaster);
-		gravaSupervisor8887(spvlMaster);
-		SendFile.serialMaster[Integer.parseInt(spvlMaster.getId())-1]=spvlMaster.getSerialNumber();
-		conexao.disconnect();	
+		boolean flag = conexao.connectVlan101(conexaoVLAN101);
+		if(!flag){
+			conexao.sendCommand("");
+			//conexao.disconnect();
+			return false;
+		}else{
+			eraseFilesSPVL4(conexao);
+		    Console.print("Obtendo dados.");
+		    String comando;
+		    comando = conexao.sendCommand
+			("cat config/srouter_info.conf | grep -m 1 ne | awk -F \"=\" '{print $2}'");
+		    String ID = FilterCommand.filter(comando).trim();
+			spvlMaster.setId(ID);
+			spvlMaster.setSerialNumber(getSerialSPVL4(conexao));
+			comando = conexao.sendCommand("cat config/srouter_info.conf | grep ne_name | awk -F = '{print $2}'");
+			spvlMaster.setNameNE(FilterCommand.filter(comando));
+			spvlMaster.setVersaoAplicacao(getVersionSPVL4(conexao));
+			spvlMaster.setStatus("Descoberto");
+			spvlMaster.discoverySlave(conexao);
+			Console.print("Adicionando dados...");
+			supervisores.add(spvlMaster);
+			gravaSupervisor8887(spvlMaster);
+			SendFile.serialMaster[Integer.parseInt(spvlMaster.getId())-1]=spvlMaster.getSerialNumber();
+			conexao.disconnect();
+			return true;
+		}
+		
 	}
 	
 	public void eraseFilesSPVL4(TelnetConnection conexao){

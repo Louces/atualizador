@@ -5,6 +5,8 @@ import java.io.PrintStream;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
+import controller.Console;
+
 
 /**
  * Esta classa é usada para conexao telnet com o hosts e suas vlans internas.
@@ -59,13 +61,26 @@ public class TelnetConnection {
 	 * Regra: 169.254.(127+ID).1 onde o ID é o endereço do NE no barramento.
 	 * @param IP é a endereço da subrede na VLAN101. 
 	 */
-	public void connectVlan101(String IP) {
+	public boolean connectVlan101(String IP) {
 		write("telnet " + IP);
 		readUntil("login: ");
 		write("root");
 		readUntil("Password: ");
 		write("root");
-		readUntil('$' + " ");
+		if(!readUntil('$' + " ").contains("Login incorrect")){
+			return true;
+		}else{
+			readUntil("login: ");
+			write("root");
+			readUntil("Password: ");
+			write("root");
+			readUntil("login: ");
+			write("root");
+			readUntil("Password: ");
+			write("root");
+			readUntil(prompt + " ");
+			return false;
+		}
 	}
 	
 	
@@ -158,7 +173,7 @@ public class TelnetConnection {
 				}
 				
 				if (ch == lastChar)
-					if (sb.toString().endsWith(pattern)){
+					if (sb.toString().endsWith(pattern) || sb.toString().contains("Login incorrect")){
 						return sb.toString();
 					}
 		

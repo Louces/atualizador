@@ -44,6 +44,11 @@ public class SendFile {
 		name = Info.getFileUpgrade().getName();
 		
 		int row = TableInfo.getRow(serialMaster[ID-1]);
+		
+		if(row < 0){
+			return;
+		}
+		
 		boolean send = Principal.getTabela().getValueAt(row, 5).equals("ENVIAR[X]");
 		
 		if(!send){

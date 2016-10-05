@@ -123,8 +123,10 @@ public class UpdateSupervisor {
 			
 			if(TableInfo.contains("ATUALIZAR")){
 				Principal.configBtn(5, true);
+				Principal.configBtn(6, true);
 			}else{
-				Principal.configBtn(5, false);	
+				Principal.configBtn(5, false);
+				Principal.configBtn(6, false);
 			}
 			
 			if(TableInfo.contains("ENVIAR")){
@@ -144,6 +146,8 @@ public class UpdateSupervisor {
 				Principal.getLbColetorUm().setBackground(Color.gray);
 				Principal.getLbColetorDois().setBackground(Color.gray);
 				Principal.configBtn(1, true);
+				Principal.configBtn(6, false);
+				Principal.flagRebootColetor = false;
 				Principal.configColetores(3);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

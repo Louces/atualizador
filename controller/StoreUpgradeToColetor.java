@@ -171,7 +171,7 @@ public class StoreUpgradeToColetor {
 				Console.print("MD5 OK!");
 				return true;
 			} else{
-				Console.print("MD5 NOK(Arquivo corrompido!");
+				Console.print("MD5 NOK(Arquivo corrompido!)");
 				return false;
 			}
 		} else {
@@ -181,7 +181,7 @@ public class StoreUpgradeToColetor {
 				Console.print("MD5 OK!");
 				return true;
 			} else{
-				Console.print("MD5 NOK(Arquivo corrompido!");
+				Console.print("MD5 NOK(Arquivo corrompido!)");
 				return false;
 			}
 		}
@@ -192,10 +192,12 @@ public class StoreUpgradeToColetor {
 		
 		if (coletor == 1){
 			telnet = Info.getServerOne();
+			
 		}else{
 			telnet = Info.getServerTwo();
 		}
-			
+		
+		telnet.connectVlan100();	
 		Console.print("Obtendo MD5 do arquivo transferido...");
 		md5 = telnet.sendCommand("md5sum "+ Info.getFileUpgrade().getName() + "| awk '{print $1}'");
 	}
