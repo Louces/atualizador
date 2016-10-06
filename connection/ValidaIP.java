@@ -103,5 +103,6 @@ public class ValidaIP {
 		numeroColetoresValidos=x+y;
 		Info.setnColetoresValidos(numeroColetoresValidos);
 		Principal.configColetores(numeroColetoresValidos);
+		
 	}
 }

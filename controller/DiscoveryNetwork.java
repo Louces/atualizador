@@ -194,12 +194,16 @@ public class DiscoveryNetwork {
 					Vlan101[i] = 0;
 					SendFile.updateSPLV4Master[i] = 0;
 				}
+				break;
 			case 3:
+				//corrigir aqui...
+				Console.print("Coletor 3");
 				conexao = Info.getServerOne();
 				if(!getInfoMaster(Vlan, conexao)){
 					Vlan101[i] = 0;
 					SendFile.updateSPLV4Master[i] = 0;
 				}
+				break;
 			default:
 				break;
 			}
@@ -210,6 +214,7 @@ public class DiscoveryNetwork {
 		int[] Vlan = spvl.getSroutersUp();
 		for (int i = 0; i < Vlan.length; i++) {
 			Vlan101[i] += Vlan[i];
+			
 			SendFile.updateSPLV4Master[i] += Vlan[i]; //cada supervisor tem q saber por quem é visto! 
 		}
 	}
