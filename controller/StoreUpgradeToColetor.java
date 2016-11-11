@@ -199,7 +199,8 @@ public class StoreUpgradeToColetor {
 		
 		telnet.connectVlan100();	
 		Console.print("Obtendo MD5 do arquivo transferido...");
-		md5 = telnet.sendCommand("md5sum "+ Info.getFileUpgrade().getName() + "| awk '{print $1}'");
+		md5 = telnet.sendCommand("md5sum "+ Info.getFileUpgrade().getName() + " | awk '{print $1}'");
+		
 	}
 	
 	public static void refreshTable(int coletores) {

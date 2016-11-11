@@ -15,6 +15,7 @@ public class Supervisor4Master implements Supervisor {
 	protected final String msgEndUpgrade = "Fim do processo de upgrade";
 	protected final String msnNoSpace = "nao possui espaco suficiente para realizar esta atualizacao";
 	protected final String msgSyslogChange = "Syslog modificado";
+	protected final String busyBox = "BusyBox";
 	protected final String msgSyslognNoChange = "Syslog nao precisa de modificacao";
 	protected final String msgPing = "0 packets received";
 	protected String status;
@@ -181,7 +182,7 @@ public class Supervisor4Master implements Supervisor {
 		
 		TelnetConnection conexao = getConexaoColetor();
 		conexao.connectVlan101("169.254."+(Integer.parseInt(getId())+127)+".1");
-		//Tratando o problema de espaço
+		/*//Tratando o problema de espaço
 		String espacoString = FilterCommand.filter(conexao.sendCommand("df -h | grep -m 1 /dev | awk '{print $5}'").replaceAll("%",""));
 		int espaco = Integer.parseInt(espacoString);
 		
@@ -191,7 +192,7 @@ public class Supervisor4Master implements Supervisor {
 			conexao.disconnect();
 			return false;
 		}//Tratando o problema de espaço
-			
+		*/			
 		stopSupervisor(conexao);
 		Console.print("Iniciando atualização em : " + getSerialNumber());
 		nameScript = Info.getFileUpgrade().getName();
@@ -220,6 +221,7 @@ public class Supervisor4Master implements Supervisor {
 				while (true) {
 					status = conexao.sendCommand("cat update.log");
 					flag = status.contains(msgSyslogChange);
+					boolean endUpgrade = status.contains(busyBox);
 					if (flag) {
 						Console.print("Aguarde 4 segundos.");
 						sleep(conexao, 4);
@@ -231,7 +233,7 @@ public class Supervisor4Master implements Supervisor {
 						rebootNotColetor(conexao);
 						conexao.disconnect();
 						return true;
-					} else if (status.contains(msgSyslognNoChange)) {
+					} else if (status.contains(msgSyslognNoChange) || endUpgrade) {
 						Console.print("Atualizando tabela");
 						runDefaultConfig(conexao); //defaultConfig
 						refreshTable(conexao,8887);

@@ -13,7 +13,7 @@ public class Supervisor4Legacy extends Supervisor4Master {
 	@Override
 	public boolean update() {
 		connect();
-		//Tratando o problema de espaço
+		/*//Tratando o problema de espaço
 		String espacoString = FilterCommand.filter(conexao.sendCommand("df -h | grep -m 1 /dev | awk '{print $5}'").replaceAll("%",""));
 		int espaco = Integer.parseInt(espacoString);
 		
@@ -23,7 +23,7 @@ public class Supervisor4Legacy extends Supervisor4Master {
 			conexao.disconnect();
 			return false;
 		}//Tratando o problema de espaço
-		
+		 */		
 		stopSupervisor(conexao);
 		Console.print("Iniciando atualização em : " + getSerialNumber());
 		nameScript = Info.getFileUpgrade().getName();
@@ -52,6 +52,7 @@ public class Supervisor4Legacy extends Supervisor4Master {
 				while (true) {
 					status = conexao.sendCommand("cat update.log");
 					flag = status.contains(msgSyslogChange);
+					boolean endUpgrade = status.contains(busyBox);
 					if (flag) {
 						Console.print("Aguarde 4 segundos.");
 						sleep(conexao, 4);
@@ -63,7 +64,7 @@ public class Supervisor4Legacy extends Supervisor4Master {
 						Console.print("Reiniciando a unidade");
 						conexao.sendCommand("reboot");
 						return true;
-					} else if (status.contains(msgSyslognNoChange)) {
+					} else if (status.contains(msgSyslognNoChange) || endUpgrade) {
 						conexao.sendCommand("rm " + nameScript);
 						Console.print("Atualizando tabela");
 						runDefaultConfig(conexao);

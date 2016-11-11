@@ -66,7 +66,7 @@ public class Supervisor4Slave extends Supervisor4Master{
 			
 			conexao.connectVlan101("169.254."+(Integer.parseInt(getId())+127)+".1");
 			conexao.connectVlan102("169.254."+getIdSlave()+".37");
-			//Tratando o problema de espaço
+			/*//Tratando o problema de espaço
 			String espacoString = FilterCommand.filter(conexao.sendCommand("df -h | grep -m 1 /dev | awk '{print $5}'").replaceAll("%",""));
 			int espaco = Integer.parseInt(espacoString);
 			
@@ -76,7 +76,7 @@ public class Supervisor4Slave extends Supervisor4Master{
 				conexao.disconnect();
 				return false;
 			}//Tratando o problema de espaço
-			
+*/			
 			stopSupervisor(conexao);
 			Console.print("Iniciando atualização em : " + getSerialNumber());
 			nameScript = Info.getFileUpgrade().getName();
@@ -106,6 +106,7 @@ public class Supervisor4Slave extends Supervisor4Master{
 					while (true) {
 						status = conexao.sendCommand("cat update.log");
 						flag = status.contains(msgSyslogChange);
+						boolean endUpgrade = status.contains(busyBox);
 						if (flag) {
 							Console.print("Aguarde 4 segundos.");
 							sleep(conexao, 4);
@@ -120,7 +121,7 @@ public class Supervisor4Slave extends Supervisor4Master{
 							conexao.disconnect();
 							conexao.disconnect();
 							return true;
-						} else if (status.contains(msgSyslognNoChange)) {
+						} else if (status.contains(msgSyslognNoChange) || endUpgrade) {
 							Console.print("Atualizando tabela");
 							refreshTable(conexao,8887);
 							runDefaultConfig(conexao);//defaultConfig
