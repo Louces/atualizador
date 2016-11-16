@@ -158,7 +158,7 @@ public class Principal extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/padtec_icone.png")));
 		
 		setResizable(false);
-		setTitle("Padtec S/A - V1.8.1");
+		setTitle("Padtec S/A - V1.8.2");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 527, 603);
 		contentPane = new JPanel();

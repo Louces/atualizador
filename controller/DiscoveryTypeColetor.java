@@ -63,7 +63,7 @@ public class DiscoveryTypeColetor {
 				break;
 			}
 		
-		if(numeroVlans==1){
+		if(numeroVlans==1 || numeroVlans == 2){
 			Info.setTypeColetor("8886");
 			return "8886";
 		}else if(numeroVlans==6){
