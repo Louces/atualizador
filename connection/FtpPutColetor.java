@@ -59,7 +59,7 @@ public class FtpPutColetor {
 			};
 
 			ftp.setCopyStreamListener(streamListener);
-
+			ftp.enterLocalPassiveMode();
 			ftp.setFileType(FTP.BINARY_FILE_TYPE);
 			Console.print("Transmitindo " + file.getName() +" para " + server);
 			//ftp.storeFile("/root/config/"+file.getName(), is);

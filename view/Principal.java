@@ -26,7 +26,6 @@ import javax.swing.table.DefaultTableModel;
 
 import com.jcraft.jsch.Session;
 
-import connection.SSHtunneling;
 import connection.TelnetConnection;
 import connection.ValidaIP;
 import controller.Console;
@@ -59,7 +58,6 @@ public class Principal extends JFrame {
 	private static JProgressBar progressBar;
 	private static String md5;
 	public static boolean flagRebootColetor;
-	SSHtunneling tunnel;
 	private Session session;
 	
 	//long inicio,fim;
@@ -158,7 +156,7 @@ public class Principal extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/padtec_icone.png")));
 		
 		setResizable(false);
-		setTitle("Padtec S/A - V1.8.2");
+		setTitle("Padtec S/A - V1.8.6 RC 01");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 527, 603);
 		contentPane = new JPanel();
@@ -181,7 +179,7 @@ public class Principal extends JFrame {
 		txfColetorUm = new TextField();
 		txfColetorUm.setBounds(194, 10, 105, 22);
 		contentPane.add(txfColetorUm);
-		//txfColetorUm.setText("172.30.0.236");
+		txfColetorUm.setText("192.168.110.10");
 
 		btnDescobrir = new Button("Descobrir");
 		btnDescobrir.setBounds(10, 10, 105, 22);

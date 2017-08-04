@@ -5,6 +5,7 @@ import connection.TelnetConnection;
 import controller.Console;
 import controller.FilterCommand;
 import controller.Info;
+import controller.StoreUpgradeToColetor;
 import controller.TableInfo;
 
 public class Supervisor4Slave extends Supervisor4Master{
@@ -13,7 +14,25 @@ public class Supervisor4Slave extends Supervisor4Master{
 
 	private int idMaster;
 	private int idSlave;
+	private int coletor91;
+	private boolean contaisFileUpdate;
+	
+	public boolean isContaisFileUpdate() {
+		return contaisFileUpdate;
+	}
 
+	public int getColetor91() {
+		return coletor91;
+	}
+
+	public void setColetor91(int coletor91) {
+		this.coletor91 = coletor91;
+	}
+
+	public void setContaisFileUpdate(boolean contaisFileUpdate) {
+		this.contaisFileUpdate = contaisFileUpdate;
+	}
+	
 	public int getIdMaster() {
 		return idMaster;
 	}

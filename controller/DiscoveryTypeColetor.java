@@ -43,7 +43,14 @@ public class DiscoveryTypeColetor {
 			Info.setServerOne(conexao);
 			conexao.connectVlan100();
 			String SNONE = conexao.sendCommand("cat /proc/cmdline | awk '{print $1}'");
-			Info.setSnColetorOne((FilterCommand.filter(SNONE).replaceAll("sn=", "")));
+			Info.setSnColetorOne((FilterCommand.filter(SNONE).replaceAll("sn=", "")));	
+			if(!SNONE.contains("root=/dev/sda2")){
+				
+			}else{
+				SNONE = FilterCommand.filter(conexao.sendCommand("printenv | grep PADTEC_SERIAL_NUMBER | awk -F \"=\" '{print$2}'"));
+				Info.setSnColetorOne(SNONE);
+			}
+			
 		}else{
 			conexao = new TelnetConnection(Info.getColetorTwo());
 			Info.setServerTwo(conexao);
@@ -69,6 +76,14 @@ public class DiscoveryTypeColetor {
 		}else if(numeroVlans==6){
 			Info.setTypeColetor("8887");
 			return "8887";
+		}else if(numeroVlans==0){
+			int nVlans = Integer.parseInt(FilterCommand.filter(conexao.sendCommand("ifconfig | grep cpu | wc -l")));
+			if(nVlans > 0){
+				Info.setTypeColetor("8887 | SPVL-91");
+				return "8887 | SPVL-91";
+			}else{
+				return "Indefinido";
+			}
 		}else{
 			Info.setTypeColetor("Indefinido");
 			return "Indefinido";

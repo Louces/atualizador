@@ -47,11 +47,21 @@ public class TelnetConnection {
 			telnet.connect(getServer(), 23);
 			in = telnet.getInputStream();
 			out = new PrintStream(telnet.getOutputStream());
-			readUntil("login: ");
-			write("root");
-			readUntil("Password: ");
-			write("root");
-			readUntil(prompt + " ");
+			
+			
+			if(readUntil("login: ").contains("spvl91#")){
+				write("root");
+				readUntil("Password: ");
+				write("5PV1XCL");
+				readUntil(prompt + " ");
+			}else{
+				write("root");
+				readUntil("Password: ");
+				write("root");
+				readUntil(prompt + " ");
+			}
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -153,7 +163,7 @@ public class TelnetConnection {
 			while (true) {
 				System.out.print(ch);
 				sb.append(ch);
-
+				//Tratando login em SPVL-4 antigos
 				if (ch == '5') {
 					ch = (char) in.read();
 					System.out.print(ch);
@@ -170,8 +180,60 @@ public class TelnetConnection {
 							sb.append(ch);
 						}
 					}
+				}//Tratando login em SPVL-4 antigos
+				
+				if(ch == 's'){
+					ch = (char) in.read();
+					System.out.print(ch);
+					sb.append(ch);
+					
+					if(ch == 'p'){
+						ch = (char) in.read();
+						System.out.print(ch);
+						sb.append(ch);
+						
+						if(ch == 'v'){
+							ch = (char) in.read();
+							System.out.print(ch);
+							sb.append(ch);
+							
+							if(ch == 'l'){
+								ch = (char) in.read();
+								System.out.print(ch);
+								sb.append(ch);
+								
+								if(ch == '9'){
+									ch = (char) in.read();
+									System.out.print(ch);
+									sb.append(ch);
+									
+									if(ch == '1'){
+										ch = (char) in.read();
+										System.out.print(ch);
+										sb.append(ch);
+										
+										if(ch == '#'){
+											if(!pattern.contains("login: ")){
+												pattern = '#' + " ";
+												System.out.print(ch);
+												sb.append(ch);	
+											}
+											
+										}
+										
+									}
+								}
+							}
+						}
+					}
 				}
 				
+		
+				
+				if(sb.toString().contains(" root]# ")){
+					pattern = '#' + " ";
+				}
+								
 				if (ch == lastChar)
 					if (sb.toString().endsWith(pattern) || sb.toString().contains("Login incorrect")){
 						return sb.toString();

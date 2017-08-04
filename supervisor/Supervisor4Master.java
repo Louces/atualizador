@@ -291,6 +291,8 @@ public class Supervisor4Master implements Supervisor {
 			    comando = conexao.sendCommand
 			    ("./supervisor -v | awk '{print $2}'");
 			    supervisor.setVersaoAplicacao(FilterCommand.filter(comando).replaceFirst("V", ""));
+			    comando = FilterCommand.filter(conexao.sendCommand("uname -a | awk '{print $10}'"));
+			    supervisor.setVersaoAplicacao(supervisor.getVersaoAplicacao() + " | Kernel " + comando);
 			    supervisor.setConexaoColetorSlave(conexao);
 			    conexao.disconnect();
 			    supervisor.setStatus("Descoberto");
