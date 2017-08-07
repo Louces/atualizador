@@ -6,19 +6,30 @@ import connection.TelnetConnection;
 
 public class StoreUpgradeToColetor {
 
-	private static String md5;
+	
+
+	public static String md5;
 	private static boolean sucess;
 	private static boolean sucessColetorOne, sucessColetorTwo;
 	@SuppressWarnings("unused")
 	private static FtpPutColetor put;
-	private static boolean coletorSPVL91containsFile;
+	private static boolean coletorOneSPVL91containsFile;
+	private static boolean coletorTwoSPVL91containsFile;
 
-	public static boolean isColetorSPVL91containsFile() {
-		return coletorSPVL91containsFile;
+	public static boolean isColetorOneSPVL91containsFile() {
+		return coletorOneSPVL91containsFile;
 	}
 
-	public static void setColetorSPVL91containsFile(boolean coletorSPVL91containsFile) {
-		StoreUpgradeToColetor.coletorSPVL91containsFile = coletorSPVL91containsFile;
+	public static void setColetorOneSPVL91containsFile(boolean coletorSPVL91containsFile) {
+		StoreUpgradeToColetor.coletorOneSPVL91containsFile = coletorSPVL91containsFile;
+	}
+	
+	public static boolean isColetorTwoSPVL91containsFile() {
+		return coletorTwoSPVL91containsFile;
+	}
+
+	public static void setColetorTwoSPVL91containsFile(boolean coletorTwoSPVL91containsFile) {
+		StoreUpgradeToColetor.coletorTwoSPVL91containsFile = coletorTwoSPVL91containsFile;
 	}
 
 	public static boolean isSucess() {
@@ -235,6 +246,7 @@ public class StoreUpgradeToColetor {
 		case 1:
 			if(Info.getTypeColetor().equals("8887 | SPVL-91")){
 				TableInfo.refresh(Info.getSnColetorOne(), 4, "Pronto p/ Transferir");
+				setColetorOneSPVL91containsFile(true);
 			}else{
 				TableInfo.refresh(Info.getSnColetorOne(), 4, "Aquardando atualização");
 				TableInfo.refresh(Info.getSnColetorOne(), 5, "ATUALIZAR[X]");
@@ -244,6 +256,7 @@ public class StoreUpgradeToColetor {
 		case 2:
 			if(Info.getTypeColetor().equals("8887 | SPVL-91")){
 				TableInfo.refresh(Info.getSnColetorTwo(), 4, "Pronto p/ Transferir");
+				setColetorTwoSPVL91containsFile(true);
 			}else{
 				TableInfo.refresh(Info.getSnColetorTwo(), 4, "Aquardando atualização");
 				TableInfo.refresh(Info.getSnColetorTwo(), 5, "ATUALIZAR[X]");
@@ -254,6 +267,8 @@ public class StoreUpgradeToColetor {
 			if(Info.getTypeColetor().equals("8887 | SPVL-91")){
 				TableInfo.refresh(Info.getSnColetorOne(), 4, "Pronto p/ Transferir");
 				TableInfo.refresh(Info.getSnColetorTwo(), 4, "Pronto p/ Transferir");
+				setColetorOneSPVL91containsFile(true);
+				setColetorTwoSPVL91containsFile(true);
 			}else{
 				TableInfo.refresh(Info.getSnColetorOne(), 4, "Aquardando atualização");
 				TableInfo.refresh(Info.getSnColetorOne(), 5, "ATUALIZAR[X]");

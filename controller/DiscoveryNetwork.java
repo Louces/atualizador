@@ -14,8 +14,8 @@ public class DiscoveryNetwork {
 	private static ArrayList<Object> supervisores = new ArrayList<Object>();
 	private Supervisor4Legacy spvlLegacy;
 	private Supervisor4Master spvlMaster;
-	private static Supervisor4Slave[] spvl4slavesColetorUm;
-	private static Supervisor4Slave[] spvl4slavesColetorDois;
+	public static Supervisor4Slave[] spvl4slavesColetorUm;
+	public static Supervisor4Slave[] spvl4slavesColetorDois;
 	private int[] Vlan101 = new int[14];
 	String[] tableRow = new String[6];
 
@@ -70,6 +70,12 @@ public class DiscoveryNetwork {
 			case 1:
 				SPVL91(1);
 				break;
+			case 2:
+				SPVL91(2);
+				break;
+			case 3:
+				SPVL91(3);
+				break;
 
 			default:
 				break;
@@ -77,8 +83,19 @@ public class DiscoveryNetwork {
 		}
 
 		Principal.configBtn(1, false);
-		Principal.configBtn(2, true);
-		Console.print("Rede descoberta.");
+		if (!Info.getTypeColetor().equals("Coletores distintos")) {
+			Principal.configBtn(2, true);
+			Console.print("Rede descoberta.");
+		} else {
+			Console.print("ERRO: Atualização disponivel apenas para coletores do mesmo tipo.");
+			try {
+				Thread.sleep(7000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.exit(0);
+		}
+
 	}
 
 	public void supervisorLegado(int server) {
@@ -309,10 +326,11 @@ public class DiscoveryNetwork {
 			getInfoSPVL91(1);
 			break;
 		case 2:
-
+			getInfoSPVL91(2);
 			break;
 		case 3:
-
+			getInfoSPVL91(1);
+			getInfoSPVL91(2);
 			break;
 		default:
 			break;
@@ -332,13 +350,13 @@ public class DiscoveryNetwork {
 
 		if (supervisor.getSlave4()) {
 			Console.print("Obtendo informações das placas SPVL-4 escravas.");
-			
+
 			if (coletor == 1) {
 				spvl4slavesColetorUm = supervisor.getSupervisor4();
 			} else if (coletor == 2) {
 				spvl4slavesColetorDois = supervisor.getSupervisor4();
 			}
-		}else{
+		} else {
 			Console.print("Coletor " + coletor + " sem unidades SPVL-4 escravos.");
 		}
 

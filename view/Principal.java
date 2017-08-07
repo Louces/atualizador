@@ -388,7 +388,12 @@ public class Principal extends JFrame {
 		configBtn(6, false);
 		getTextAreaConsole().setText("");
 		
-		SendFile.sendMaster();
+		if(Info.getTypeColetor().contains("SPVL-91")){
+			SendFile.sendSlave4Spvl_91();
+		}else{
+			SendFile.sendMaster();	
+		}
+		
 		
 		if(flagRebootColetor){
 			configBtn(6, true);

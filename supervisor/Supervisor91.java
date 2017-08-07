@@ -1,9 +1,12 @@
 package supervisor;
 
+import connection.FtpPutColetor;
 import connection.TelnetConnection;
 import controller.Console;
 import controller.FilterCommand;
 import controller.Info;
+import controller.SendFile;
+import controller.StoreUpgradeToColetor;
 import view.Principal;
 
 public class Supervisor91 {
@@ -99,6 +102,27 @@ public class Supervisor91 {
 		}
 
 		return slaves;
+	}
+	
+	public boolean sendoFileToSPVL_4(Supervisor4Slave slave){
+		conexaoColetor.sendCommand("cd /srv/tftpboot/");
+		conexaoColetor.sendCommand("ftp -p " + "169.254." + slave.getIdSlave() + ".37",": ");
+		conexaoColetor.write("root");
+		conexaoColetor.readUntil("Password:");
+		conexaoColetor.write("root");
+		conexaoColetor.readUntil("ftp> ");
+		conexaoColetor.sendCommand("put "+ Info.getFileUpgrade().getName(), "ftp> ");
+		conexaoColetor.sendCommand("quit");
+		conexaoColetor.connectVlan101("169.254." + slave.getIdSlave() + ".37");
+		String md5 = FilterCommand.filter(conexaoColetor.sendCommand("md5sum " + Info.getFileUpgrade().getName() +" | awk '{print $1}'"));
+		
+		
+		if((StoreUpgradeToColetor.md5).contains(md5)){
+			conexaoColetor.disconnect();
+			return true;
+		}
+		conexaoColetor.disconnect();
+		return false;
 	}
 
 }
