@@ -84,8 +84,12 @@ public class DiscoveryNetwork {
 
 		Principal.configBtn(1, false);
 		if (!Info.getTypeColetor().equals("Coletores distintos")) {
-			Principal.configBtn(2, true);
-			Console.print("Rede descoberta.");
+
+			if (Info.getnColetoresValidos() != 0) {
+				Principal.configBtn(2, true);
+				Console.print("Rede descoberta.");
+			}
+
 		} else {
 			Console.print("ERRO: Atualização disponivel apenas para coletores do mesmo tipo.");
 			try {
@@ -346,9 +350,10 @@ public class DiscoveryNetwork {
 		tableRow[3] = "---------------------------------";
 		tableRow[4] = "---------------------------------";
 		tableRow[5] = "---------------------------------";
-		Principal.recordTable(tableRow);
+		
 
 		if (supervisor.getSlave4()) {
+			Principal.recordTable(tableRow);
 			Console.print("Obtendo informações das placas SPVL-4 escravas.");
 
 			if (coletor == 1) {
@@ -358,6 +363,8 @@ public class DiscoveryNetwork {
 			}
 		} else {
 			Console.print("Coletor " + coletor + " sem unidades SPVL-4 escravos.");
+			Info.setnColetoresValidos(Info.getnColetoresValidos() - coletor);
+			Principal.configColetores(Info.getnColetoresValidos());
 		}
 
 	}

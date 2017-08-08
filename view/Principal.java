@@ -156,7 +156,7 @@ public class Principal extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/padtec_icone.png")));
 		
 		setResizable(false);
-		setTitle("Padtec S/A - V1.8.6 RC 01");
+		setTitle("Padtec S/A - V1.8.6");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 527, 603);
 		contentPane = new JPanel();
@@ -179,7 +179,7 @@ public class Principal extends JFrame {
 		txfColetorUm = new TextField();
 		txfColetorUm.setBounds(194, 10, 105, 22);
 		contentPane.add(txfColetorUm);
-		txfColetorUm.setText("192.168.110.10");
+		//txfColetorUm.setText("192.168.110.10");
 
 		btnDescobrir = new Button("Descobrir");
 		btnDescobrir.setBounds(10, 10, 105, 22);
@@ -443,7 +443,10 @@ public class Principal extends JFrame {
 			getBtnAtualizar().setEnabled(true);
 			break;
 		case 6:
-			getBtnReinicioColetores().setEnabled(true);
+			if(!Info.getTypeColetor().equals("8887 | SPVL-91")){
+				getBtnReinicioColetores().setEnabled(true);	
+			}
+			
 		default:
 		break;
 		}
@@ -467,7 +470,7 @@ public class Principal extends JFrame {
 			getBtnAtualizar().setEnabled(false);
 			break;
 		case 6:
-			getBtnReinicioColetores().setEnabled(false);
+			getBtnReinicioColetores().setEnabled(false);	
 			break;	
 		default:
 		break;
@@ -533,6 +536,11 @@ public class Principal extends JFrame {
 	
 	public static void configColetores(int coletores){
 		switch (coletores) {
+		case 0:
+			lbColetorUm.setVisible(false);
+			txfColetorUm.setVisible(false);
+			lbColetorDois.setVisible(false);
+			txfColetorDois.setVisible(false);
 		case 1:
 			lbColetorDois.setVisible(false);
 			txfColetorDois.setVisible(false);

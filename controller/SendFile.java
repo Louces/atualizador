@@ -39,21 +39,26 @@ public class SendFile {
 	}
 
 	public static void sendSlave4Spvl_91() {
+		Principal.configBtn(4, false);
+		Principal.configBtn(5, false);
 		int rows = Principal.getTabela().getRowCount();
 
 		for (int i = 0; i < rows; i++) {
 			if (Principal.getTabela().getValueAt(i, 5).equals("ENVIAR[X]")) {
 				
-				Supervisor4Slave slave = null;
-				boolean flag = false;
+				Supervisor4Slave slaveOne = null;
+				Supervisor4Slave slaveTwo = null;
+				boolean flagOne = false;
+				boolean flagTwo = false;
 
 				if (DiscoveryNetwork.spvl4slavesColetorUm != null)
 					for (int j = 0; j < DiscoveryNetwork.spvl4slavesColetorUm.length; j++) {
 						if (DiscoveryNetwork.spvl4slavesColetorUm[j] != null) {
-							slave = DiscoveryNetwork.spvl4slavesColetorUm[j];
+							slaveOne = DiscoveryNetwork.spvl4slavesColetorUm[j];
 
-							if (slave.getSerialNumber().equals(Principal.getTabela().getValueAt(i, 1))) {
-								flag = true;
+							if (slaveOne.getSerialNumber().equals(Principal.getTabela().getValueAt(i, 1))) {
+								flagOne = true;
+								break;
 							}
 						}
 					}
@@ -61,41 +66,44 @@ public class SendFile {
 				if (DiscoveryNetwork.spvl4slavesColetorDois != null)
 					for (int j = 0; j < DiscoveryNetwork.spvl4slavesColetorDois.length; j++) {
 						if (DiscoveryNetwork.spvl4slavesColetorDois[j] != null) {
-							slave = DiscoveryNetwork.spvl4slavesColetorDois[j];
+							slaveTwo = DiscoveryNetwork.spvl4slavesColetorDois[j];
 
-							if (slave.getSerialNumber().equals(Principal.getTabela().getValueAt(i, 1))) {
-								flag = true;
+							if (slaveTwo.getSerialNumber().equals(Principal.getTabela().getValueAt(i, 1))) {
+								flagTwo = true;
+								break;
 							}
 						}
 					}
 
-				if (flag) {
-					int coletor = slave.getColetor91();
-
-					if (coletor == 1) {
+				if (flagOne || flagTwo) {
+					
+					if (flagOne) {
 						Supervisor91 supervisor91 = new Supervisor91(1);
-						TableInfo.refresh(slave.getSerialNumber(), 4, "Downloading...");
-						Console.print("Downloading... > SPVL-4#" + slave.getSerialNumber());
-						if(supervisor91.sendoFileToSPVL_4(slave)){
-							Console.print("Transferencia completa em SPVL-4#" + slave.getSerialNumber());
-							TableInfo.refresh(slave.getSerialNumber(), 4, "Disponivel p/ Atualização");
-							TableInfo.refresh(slave.getSerialNumber(), 5, "ATUALIZAR[X]");	
+						TableInfo.refresh(slaveOne.getSerialNumber(), 4, "Downloading...");
+						Console.print("Downloading... > SPVL-4#" + slaveOne.getSerialNumber() +" | Aquarde!");
+						
+						boolean send =supervisor91.sendoFileToSPVL_4(slaveOne); 
+						
+						if(send){
+							Console.print("Transferencia completa em SPVL-4#" + slaveOne.getSerialNumber());
+							TableInfo.refresh(slaveOne.getSerialNumber(), 4, "Disponivel p/ Atualização");
+							TableInfo.refresh(slaveOne.getSerialNumber(), 5, "ATUALIZAR[X]");	
 						}else{
-							TableInfo.refresh(slave.getSerialNumber(), 4, "Falha ao transmitir...");
+							TableInfo.refresh(slaveOne.getSerialNumber(), 4, "Falha ao transmitir...");
 						}
 						
 					}
 
-					if (coletor == 2) {
+					if (flagTwo) {
 						Supervisor91 supervisor91 = new Supervisor91(2);
-						TableInfo.refresh(slave.getSerialNumber(), 4, "Downloading...");
-						Console.print("Downloading... > SPVL-4#" + slave.getSerialNumber());
-						if(supervisor91.sendoFileToSPVL_4(slave)){
-							Console.print("Transferencia completa em SPVL-4#" + slave.getSerialNumber());
-							TableInfo.refresh(slave.getSerialNumber(), 4, "Disponivel p/ Atualização");
-							TableInfo.refresh(slave.getSerialNumber(), 5, "ATUALIZAR[X]");	
+						TableInfo.refresh(slaveTwo.getSerialNumber(), 4, "Downloading...");
+						Console.print("Downloading... > SPVL-4#" + slaveTwo.getSerialNumber());
+						if(supervisor91.sendoFileToSPVL_4(slaveTwo)){
+							Console.print("Transferencia completa em SPVL-4#" + slaveTwo.getSerialNumber());
+							TableInfo.refresh(slaveTwo.getSerialNumber(), 4, "Disponivel p/ Atualização");
+							TableInfo.refresh(slaveTwo.getSerialNumber(), 5, "ATUALIZAR[X]");	
 						}else{
-							TableInfo.refresh(slave.getSerialNumber(), 4, "Falha ao transmitir...");
+							TableInfo.refresh(slaveTwo.getSerialNumber(), 4, "Falha ao transmitir...");
 						}
 					}
 
@@ -103,7 +111,7 @@ public class SendFile {
 
 			}
 		}
-
+		configBTN();
 	}
 
 	public static void ftpget(int coletor, int ID) {

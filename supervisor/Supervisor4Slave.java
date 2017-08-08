@@ -68,22 +68,27 @@ public class Supervisor4Slave extends Supervisor4Master{
 			TelnetConnection conexao = getConexaoColetorSlave();
 			int tentativas=0;
 			
-			while(true){
-				
-				if(conexao.sendCommand("ping -c 1 "+"169.254."+(Integer.parseInt(getId())+127)+".1").contains(" 1 packets received")){
-					break;
-				}else{
-					Console.print("Tentando conexao com "+SN);
-					conexao.sendCommand("sleep 20");
-					tentativas++;
-					if(tentativas>=6){
-						Console.print("sem conexao com "+SN);
-						return false;
+			if(!Info.getTypeColetor().equals("8887 | SPVL-91")){
+				while(true){
+					
+					if(conexao.sendCommand("ping -c 1 "+"169.254."+(Integer.parseInt(getId())+127)+".1").contains(" 1 packets received")){
+						break;
+					}else{
+						Console.print("Tentando conexao com "+SN);
+						conexao.sendCommand("sleep 20");
+						tentativas++;
+						if(tentativas>=6){
+							Console.print("sem conexao com "+SN);
+							return false;
+						}
 					}
 				}
 			}
+
+			if(!Info.getTypeColetor().equals("8887 | SPVL-91")){
+				conexao.connectVlan101("169.254."+(Integer.parseInt(getId())+127)+".1");	
+			}
 			
-			conexao.connectVlan101("169.254."+(Integer.parseInt(getId())+127)+".1");
 			conexao.connectVlan102("169.254."+getIdSlave()+".37");
 			/*//Tratando o problema de espaço
 			String espacoString = FilterCommand.filter(conexao.sendCommand("df -h | grep -m 1 /dev | awk '{print $5}'").replaceAll("%",""));
@@ -115,7 +120,11 @@ public class Supervisor4Slave extends Supervisor4Master{
 					if (status.contains(msnNoSpace)) {
 						Console.print("Atualização falhou devido a falta de espaço.");
 						TableInfo.refresh(getSerialNumber(), 4, "Falta de espaço.");
-						conexao.disconnect();
+						
+						if(!Info.getTypeColetor().equals("8887 | SPVL-91")){
+							conexao.disconnect();	
+						}
+						
 						conexao.disconnect();
 						return false;
 					}
@@ -137,7 +146,9 @@ public class Supervisor4Slave extends Supervisor4Master{
 							TableInfo.refresh(getSerialNumber(), 4, "Unidade reinicializada");
 							TableInfo.refresh(getSerialNumber(), 5, "-");
 							//rebootNotColetor(conexao);
-							conexao.disconnect();
+							if(!Info.getTypeColetor().equals("8887 | SPVL-91")){
+								conexao.disconnect();	
+							}
 							conexao.disconnect();
 							return true;
 						} else if (status.contains(msgSyslognNoChange) || endUpgrade) {
@@ -148,7 +159,9 @@ public class Supervisor4Slave extends Supervisor4Master{
 							TableInfo.refresh(getSerialNumber(), 4, "Unidade reinicializada");
 							TableInfo.refresh(getSerialNumber(), 5, "-");
 							//rebootNotColetor(conexao);
-							conexao.disconnect();
+							if(!Info.getTypeColetor().equals("8887 | SPVL-91")){
+								conexao.disconnect();	
+							}
 							conexao.disconnect();
 							return true;
 						} else {

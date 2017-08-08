@@ -91,7 +91,7 @@ public class Supervisor91 {
 			    String[] tableRow = new String[6];
 			    tableRow[0] = "Coletor " + coletor; 
 			    tableRow[1] = slave.getSerialNumber();
-			    tableRow[2] = "SPVL-4 | S1";
+			    tableRow[2] = "SPVL-4 | S" + slave.getIdSlave();
 			    tableRow[3] = slave.getVersaoAplicacao();
 			    tableRow[4] = "Descoberto";
 			    tableRow[5] = "ENVIAR[X]";
@@ -113,6 +113,8 @@ public class Supervisor91 {
 		conexaoColetor.readUntil("ftp> ");
 		conexaoColetor.sendCommand("put "+ Info.getFileUpgrade().getName(), "ftp> ");
 		conexaoColetor.sendCommand("quit");
+		
+		
 		conexaoColetor.connectVlan101("169.254." + slave.getIdSlave() + ".37");
 		String md5 = FilterCommand.filter(conexaoColetor.sendCommand("md5sum " + Info.getFileUpgrade().getName() +" | awk '{print $1}'"));
 		
@@ -123,6 +125,10 @@ public class Supervisor91 {
 		}
 		conexaoColetor.disconnect();
 		return false;
+	}
+	
+	public boolean undateSlave(Supervisor4Slave slave){
+		return slave.update();
 	}
 
 }

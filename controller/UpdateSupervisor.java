@@ -7,13 +7,14 @@ import connection.TelnetConnection;
 import supervisor.Supervisor4Legacy;
 import supervisor.Supervisor4Master;
 import supervisor.Supervisor4Slave;
+import supervisor.Supervisor91;
 import view.Principal;
 
 public class UpdateSupervisor {
 
 	private String typeColetor;
 	private ArrayList<Object> SPVL;
-	
+
 	public void update() {
 		config();
 
@@ -27,8 +28,7 @@ public class UpdateSupervisor {
 			for (Supervisor4Legacy spvl : spvlLegacy) {
 				String SN = spvl.getSerialNumber();
 				int row = TableInfo.getRow(SN);
-				boolean flag = 
-				Principal.getTabela().getValueAt(row, 5).equals("ATUALIZAR[X]");
+				boolean flag = Principal.getTabela().getValueAt(row, 5).equals("ATUALIZAR[X]");
 
 				if (row != -1 && flag) {
 					Principal.configBtn(5, false);
@@ -40,15 +40,15 @@ public class UpdateSupervisor {
 
 			}
 			configBTN(8886);
-		}else if(typeColetor.contains("8887")){
+		} else if (typeColetor.equals("8887")) {
 			ArrayList<Supervisor4Master> spvlMaster = new ArrayList<Supervisor4Master>();
-			
-			for(Object array : SPVL){
+
+			for (Object array : SPVL) {
 				spvlMaster.add((Supervisor4Master) array);
 			}
-			
-			for(Supervisor4Master spvl : spvlMaster){
-				
+
+			for (Supervisor4Master spvl : spvlMaster) {
+
 				if (spvl.isContainsSlave()) {
 					Supervisor4Slave[] slave = spvl.getEscravo();
 
@@ -58,46 +58,70 @@ public class UpdateSupervisor {
 						}
 					}
 				}
-				
-				String SN  = spvl.getSerialNumber();
+
+				String SN = spvl.getSerialNumber();
 				int row = TableInfo.getRow(SN);
 				boolean flag = Principal.getTabela().getValueAt(row, 5).equals("ATUALIZAR[X]");
-				
-				if(row!=-1 && flag){
+
+				if (row != -1 && flag) {
 					Principal.configBtn(4, false);
 					Principal.configBtn(5, false);
 					spvl.update();
 				}
 			}
-			
+
 			int nUpdade = 0;
-			
-			for(Supervisor4Master spvl : spvlMaster){
+
+			for (Supervisor4Master spvl : spvlMaster) {
 				boolean flag = spvl.isUpdate();
-				if(flag){
+				if (flag) {
 					nUpdade++;
 				}
 			}
-			
-			if(nUpdade==spvlMaster.size()&&TableInfo.endUpdate()){
-				
-				if(Info.getServerOne()!=null){
+
+			if (nUpdade == spvlMaster.size() && TableInfo.endUpdate()) {
+
+				if (Info.getServerOne() != null) {
 					TelnetConnection conexao = Info.getServerOne();
 					conexao.sendCommand("reboot");
 					TableInfo.refresh(Info.getSnColetorOne(), 4, "Unidade reinicializada.");
 				}
-				
-				if(Info.getServerTwo()!=null){
+
+				if (Info.getServerTwo() != null) {
 					TelnetConnection conexao = Info.getServerTwo();
 					conexao.sendCommand("reboot");
 					TableInfo.refresh(Info.getSnColetorTwo(), 4, "Unidade reinicializada.");
 				}
 			}
 			configBTN(8887);
-			
-			if(Principal.flagRebootColetor){
-				Principal.configBtn(6,true);
+
+			if (Principal.flagRebootColetor) {
+				Principal.configBtn(6, true);
 			}
+		} else if (typeColetor.equals("8887 | SPVL-91")) {
+			Supervisor4Slave[] slaveUm = DiscoveryNetwork.spvl4slavesColetorUm;
+			Supervisor4Slave[] slaveDois = DiscoveryNetwork.spvl4slavesColetorDois;
+
+			if (slaveUm != null) {
+				for (int i = 0; i < slaveUm.length; i++) {
+					if (slaveUm[i] != null) {
+						slaveUm[i].update();
+					}
+				}
+
+			}
+			
+			if (slaveDois != null) {
+				for (int i = 0; i < slaveDois.length; i++) {
+					if (slaveDois[i] != null) {
+						slaveDois[i].update();
+					}
+				}
+
+			}
+			
+			configBTN(8887);
+
 		}
 	}
 
@@ -109,33 +133,33 @@ public class UpdateSupervisor {
 		typeColetor = Info.getTypeColetor();
 		SPVL = DiscoveryNetwork.getSupervisores();
 	}
-	
-	public void configBTN(int tipo){
+
+	public void configBTN(int tipo) {
 		int btn;
-		
+
 		if (tipo == 8886) {
 			btn = 3;
 		} else {
 			btn = 4;
 		}
-		
-		if(TableInfo.contains("ATUALIZAR")||TableInfo.contains("ENVIAR")) {
-			
-			if(TableInfo.contains("ATUALIZAR")){
+
+		if (TableInfo.contains("ATUALIZAR") || TableInfo.contains("ENVIAR")) {
+
+			if (TableInfo.contains("ATUALIZAR")) {
 				Principal.configBtn(5, true);
 				Principal.configBtn(6, true);
-			}else{
+			} else {
 				Principal.configBtn(5, false);
 				Principal.configBtn(6, false);
 			}
-			
-			if(TableInfo.contains("ENVIAR")){
-				Principal.configBtn(btn, true);	
-			}else{
+
+			if (TableInfo.contains("ENVIAR")) {
+				Principal.configBtn(btn, true);
+			} else {
 				Principal.configBtn(btn, false);
 			}
-			
-		}else{
+
+		} else {
 			try {
 				Console.print("Fim do processo de atualização.");
 				Console.print("Liberando para nova atualização em 15s.");
@@ -154,5 +178,5 @@ public class UpdateSupervisor {
 			}
 		}
 	}
-	
+
 }
